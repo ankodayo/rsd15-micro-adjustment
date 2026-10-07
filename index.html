@@ -1,0 +1,721 @@
+<title>Seven Days of Micro-Adjustment</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+:root{--ground:#EDE9E2;--chrome:#F6F4F0;--line:#DCD6CC;--ink:#1A1A1C;--body:#4A453E;
+  --muted:#7C7568;--faint:#A9A296;--accent:#C874AE;--focus:#5C7FD6}
+:root:not([data-theme="light"]){@media (prefers-color-scheme:dark){
+  :root{--ground:#141316;--chrome:#1C1B1F;--line:#33313A;--ink:#F0ECE5;--body:#D6D0C7;
+        --muted:#A29B92;--faint:#7C7568}}}
+:root[data-theme="dark"]{--ground:#141316;--chrome:#1C1B1F;--line:#33313A;--ink:#F0ECE5;
+  --body:#D6D0C7;--muted:#A29B92;--faint:#7C7568}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--body);
+  font:400 13.5px/1.55 Archivo,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{display:grid;grid-template-columns:330px minmax(0,1fr);min-height:100vh}
+aside{background:var(--chrome);border-right:1px solid var(--line);display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow:hidden}
+.brand{padding:26px 26px 20px}
+h1{font:600 21px/1.24 Archivo,sans-serif;letter-spacing:-.015em;color:var(--ink);margin:0 0 8px;text-wrap:balance}
+.lede{color:var(--muted);font-size:12px;margin:0}
+.tabs{display:flex;gap:18px;padding:0 26px 14px;border-bottom:1px solid var(--line)}
+.tab{appearance:none;background:none;border:0;padding:0 0 6px;cursor:pointer;color:var(--faint);
+  font:500 11.5px/1 Archivo,sans-serif;border-bottom:1.5px solid transparent}
+.tab:hover{color:var(--body)}
+.tab.active{color:var(--ink);border-color:var(--ink)}
+.tab:focus-visible,.reset:focus-visible,a:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+#panel{padding:22px 26px 30px;overflow-y:auto;flex:1}
+.pk{font:500 9.5px/1 Archivo,sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);margin:22px 0 8px}
+.pk:first-child{margin-top:0}
+.pid{font:400 26px/1 "IBM Plex Mono",monospace;color:var(--ink);letter-spacing:-.02em}
+.pid.small{font:600 17px/1.25 Archivo,sans-serif;letter-spacing:-.01em}
+.pmeta{font-size:11.5px;color:var(--muted);margin-top:7px}
+.psum{margin:14px 0 0;font-size:13px;line-height:1.6;color:var(--body)}
+.quote{margin:12px 0 0;padding:0 0 0 12px;border-left:2px solid var(--line);
+  font-size:13px;line-height:1.5;color:var(--muted);font-style:italic}
+.pnote{margin:0;font-size:12px;line-height:1.55;color:var(--muted)}
+.pfoot{margin-top:20px;font:400 10.5px/1 "IBM Plex Mono",monospace;color:var(--faint)}
+.stages{margin-top:20px;display:flex;flex-direction:column}
+.srow{display:grid;grid-template-columns:9px 1fr;column-gap:10px;align-items:baseline;
+  padding:9px 0;border-top:1px solid var(--line)}
+.sdot{width:7px;height:7px;border-radius:50%;grid-row:span 2;transform:translateY(-1px)}
+.srole{font:500 9.5px/1.4 Archivo,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.sval{grid-column:2;font-size:13px;color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+.sval:hover{border-color:var(--accent)}
+.snote{grid-column:2;font:400 11.5px/1.45 Archivo,sans-serif;color:var(--faint);font-style:italic}
+.lgset{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.lg{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--muted)}
+.lg i{width:9px;height:9px;border-radius:50%;flex:none}
+.freqkey{display:flex;gap:22px;margin:10px 0}
+.fk{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+.fk i.fkbar{height:3px;border-radius:1.5px;background:var(--faint);flex:none}
+.fk i.fkbar.short{width:8px}
+.fk i.fkbar.long{width:26px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font:400 11px/1 "IBM Plex Mono",monospace;color:var(--body);text-decoration:none;
+  border:1px solid var(--line);padding:5px 6px}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.ctx{border-style:dashed;color:var(--faint)}
+.reset{margin-top:26px;appearance:none;background:none;border:1px solid var(--line);
+  color:var(--muted);font:500 11px/1 Archivo,sans-serif;padding:9px 15px;cursor:pointer}
+.reset:hover{color:var(--ink);border-color:var(--faint)}
+main{padding:26px 30px 44px;min-width:0}
+#stage{background:#F6F4F0;border:1px solid var(--line);overflow:hidden}
+#stage svg{display:block;width:100%;height:auto}
+#card{padding:16px 26px 18px;border-bottom:1px solid var(--line);min-height:96px}
+#card .cid{font:400 16px/1 "IBM Plex Mono",monospace;color:var(--ink)}
+#card .cid.small{font:600 14px/1.3 Archivo,sans-serif}
+#card .cmeta{font-size:11px;color:var(--faint);margin-top:6px}
+#card .cline{font-size:12px;line-height:1.5;color:var(--body);margin-top:8px}
+#card .cidle{font-size:11.5px;color:var(--faint)}
+.legend{margin-top:14px;display:flex;justify-content:space-between;gap:24px;
+  font-size:11px;color:var(--faint)}
+@media (max-width:1100px){
+  .wrap{grid-template-columns:1fr}
+  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  /* on a narrow screen the detail would sit off-screen above the map, so it
+     becomes a sheet pinned to the bottom of the viewport instead */
+  #panel{position:fixed;left:0;right:0;bottom:0;z-index:5;max-height:46vh;
+    background:var(--chrome);border-top:1px solid var(--line);
+    box-shadow:0 -6px 24px rgba(30,25,20,.10);padding:18px 22px 22px}
+  main{padding-bottom:180px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <aside>
+    <div class="brand">
+      <h1>Twenty-One Interactional Events</h1>
+      <p class="lede">A week of remote family calls, coded as micro-adjustments — read for what recurs, and what each response leaves behind.</p>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-view="field">Seven days</button>
+      <button class="tab" data-view="branch">Branching</button>
+      <button class="tab" data-view="residue">Residue</button>
+    </div>
+    <div id="card"></div>
+    <div id="panel"></div>
+  </aside>
+  <main>
+    <div id="stage"></div>
+    <div class="legend">
+      <span>Single self-documented case · 5–11 January 2026</span>
+      <span>Source: Conversation_Log_Integrated_for_RSD15.xlsx</span>
+    </div>
+  </main>
+</div>
+<script>window.__L2__={"meta":{"title":"RSD15 L2 accumulation map","source_workbook":"Conversation_Log_Integrated_for_RSD15.xlsx","generated":"2026-09-04","corpus":{"events":21,"calls":14,"days":7,"first_day":"2026-01-05","last_day":"2026-01-11"},"layers":{"atoms":"codes exactly as recorded in Form Responses 2","display":"documented groupings of those codes into map lanes","derived":"counts and relations recomputed from the atoms"}},"stages":{"T":{"title":"Interaction condition","note":"What was happening in the call at the point where a response was needed."},"M":{"title":"Relational move","note":"The adjustment made in response, and by whom."},"O":{"title":"Immediate outcome","note":"What happened to the exchange straight afterwards."},"Z":{"title":"Post-interaction residue","note":"What Ayano recorded as remaining afterwards."}},"order":{"T":["T1","T2","T3","T4","T5","T6","T7","T8"],"M":["M10","M2","M1","M3","M4","M6","M5","M7","M8","M9"],"O":["O3","O4","O1","O2","O9","O8","O6","O10","O5","O7"],"Z":["Z1","Z2","Z3","Z4","Z5","Z6"]},"categories":{"T1":{"id":"T1","stage":"T","label":"Talk holds, or comes back","members":["ST01","TV01","RECOVERY"],"rationale":"Stable reciprocal exchange, a topic she can stay with, and one recovery inside a difficult call.","events":["E09","E11","E12","E13","E14","E20"],"count":6},"T2":{"id":"T2","stage":"T","label":"Attention is on the room, not the call","members":["MC04","CC05"],"rationale":"Her attention is not on the exchange: the gaze moves away, or the reply does not come.","events":["E01","E03","E04","E07"],"count":4},"T3":{"id":"T3","stage":"T","label":"Seeing herself on screen is hard","members":["CM01"],"rationale":"The condition is her own image on screen, not general attention drift.","events":["E15"],"count":1},"T4":{"id":"T4","stage":"T","label":"She doubts what I'm telling her","members":["HD04"],"rationale":"Suspicion or doubt directed at Ayano's account or plans.","events":["E05"],"count":1},"T5":{"id":"T5","stage":"T","label":"The thread breaks and doesn't come back","members":["CC03","CC04"],"rationale":"The topic breaks away, or an attempt to repair the exchange gets no uptake.","events":["E06","E08"],"count":2},"T6":{"id":"T6","stage":"T","label":"She won't say how she is","members":["DS01","DS03","TL01"],"rationale":"A question about her own state is declined, or answered with the least she can say.","events":["E16","E18"],"count":2},"T7":{"id":"T7","stage":"T","label":"She sets a limit","members":["AS04"],"rationale":"She states, in words or by leaving the frame, that she cannot continue right now.","events":["E02","E10"],"count":2},"T8":{"id":"T8","stage":"T","label":"Something only she can perceive","members":["HD01","HD03"],"rationale":"She responds to something Ayano cannot see or verify, and says so in words the record keeps (\"something's flying at me\", \"I can see it, you know\"). Two events that carried the same HD01 code (E02, E18) do not carry this in the written record and are placed elsewhere; see CONDITION_OVERRIDE.","events":["E17","E19","E21"],"count":3},"M10":{"id":"M10","stage":"M","label":"Stay with the topic, listen back","members":["R09","P02"],"rationale":"Reciprocity is kept going on both sides.","events":["E11","E12","E14"],"count":3},"M2":{"id":"M2","stage":"M","label":"Wait without filling the silence","members":["R02"],"rationale":"Holding the exchange open without pressing.","events":["E04","E10","E13"],"count":3},"M1":{"id":"M1","stage":"M","label":"Bring focus back, ask again","members":["R05"],"rationale":"Re-anchoring shared attention, with clarification.","events":["E01","E03","E07"],"count":3},"M3":{"id":"M3","stage":"M","label":"Reassure, correct only lightly","members":["R01","P06"],"rationale":"Calming, with correction kept minimal.","events":["E05","E17"],"count":2},"M4":{"id":"M4","stage":"M","label":"Change the subject gently","members":["R06"],"rationale":"A deliberate move to a different, safer topic.","events":["E06","E09"],"count":2},"M6":{"id":"M6","stage":"M","label":"Mother changes what the camera shows","members":["B08"],"rationale":"Visibility is reconfigured so contact can continue. Logged as B06 (a scheduling/place boundary); B08 \"asymmetric video boundary\" is the code that matches what happened and is already used as a trigger code in E20 — see DATA.md correction C5.","events":["E15","E20"],"count":2},"M5":{"id":"M5","stage":"M","label":"Ask directly, out of frustration","members":["P08"],"rationale":"The difficulty is named directly; this may repair or strain.","events":["E08","E18"],"count":2},"M7":{"id":"M7","stage":"M","label":"Stop asking, or agree to stop","members":["P07"],"rationale":"Interpretation is suspended, or a stop is agreed.","events":["E16","E19"],"count":2},"M8":{"id":"M8","stage":"M","label":"End the call there","members":["B01_ABRUPT"],"rationale":"The call stops without it being negotiated.","events":["E02"],"count":1},"M9":{"id":"M9","stage":"M","label":"Mother hands the phone to Father","members":["RELAY"],"rationale":"The conversation is passed to a third person.","events":["E21"],"count":1},"O3":{"id":"O3","stage":"O","label":"Back-and-forth held","members":[],"rationale":"Mutual exchange continued.","events":["E09","E11","E12","E13","E14"],"count":5},"O4":{"id":"O4","stage":"O","label":"Contact kept, visibility changed","members":[],"rationale":"Connection continued through a changed modality.","events":["E15","E20"],"count":2},"O1":{"id":"O1","stage":"O","label":"Answered, focus returned","members":[],"rationale":"A concrete answer brought shared attention back.","events":["E03"],"count":1},"O2":{"id":"O2","stage":"O","label":"Talk continued, nothing resolved","members":[],"rationale":"The exchange held but the concern stayed open.","events":["E01","E04","E05","E17"],"count":4},"O9":{"id":"O9","stage":"O","label":"Asking stopped, little shared","members":[],"rationale":"Questioning ended; disclosure stayed limited.","events":["E16"],"count":1},"O8":{"id":"O8","stage":"O","label":"Both agreed to stop","members":[],"rationale":"Stopping was decided together.","events":["E19"],"count":1},"O6":{"id":"O6","stage":"O","label":"Call ended for a task","members":[],"rationale":"An everyday task took priority over continuing.","events":["E10"],"count":1},"O10":{"id":"O10","stage":"O","label":"Father took over","members":[],"rationale":"The exchange continued through a third person.","events":["E21"],"count":1},"O5":{"id":"O5","stage":"O","label":"Rally didn't return, tension rose","members":[],"rationale":"Repair was attempted and did not land.","events":["E06","E07","E08"],"count":3},"O7":{"id":"O7","stage":"O","label":"Call ended without warning","members":[],"rationale":"An early or unnegotiated end.","events":["E02","E18"],"count":2},"Z1":{"id":"Z1","stage":"Z","label":"Relief, feeling connected","members":["PR01"],"rationale":"Recorded as connection and relief.","events":["E09","E11","E12","E13","E14","E20"],"count":6},"Z2":{"id":"Z2","stage":"Z","label":"Okay with stopping","members":["PR02"],"rationale":"Stopping was recorded as acceptable, not as failure.","events":["E19"],"count":1},"Z3":{"id":"Z3","stage":"Z","label":"Still on guard, still worried","members":["RS03","RS15"],"rationale":"Hypervigilance and unresolved concern are still merged here; see the pending decision in DATA.md.","events":["E01","E03","E05","E07","E15","E16","E17","E19","E21"],"count":9},"Z4":{"id":"Z4","stage":"Z","label":"Left deciding alone","members":["RS12"],"rationale":"Judgment fatigue: the deciding stayed with Ayano.","events":["E01","E04","E10","E13","E16","E17"],"count":6},"Z5":{"id":"Z5","stage":"Z","label":"Frustration","members":["RS13"],"rationale":"Irritation and frustration recorded after the exchange.","events":["E06","E08","E18"],"count":3},"Z6":{"id":"Z6","stage":"Z","label":"Guilt, loss of connection","members":["RS04","RS05"],"rationale":"Self-blame and the sense of a lost exchange; separated from frustration by correction C3.","events":["E02","E06","E08","E18"],"count":4}},"codebook":{"CC01":{"id":"CC01","label_jp":"話題固執","label_en":"Topic fixation","definition":"同一話題に戻り続け、話題転換が成立しない（相手が切り替えを試みても再帰する）。","kind":"trigger","source_sheet":"Events list"},"CC02":{"id":"CC02","label_jp":"詳細詰問","label_en":"Interrogative loop","definition":"細部確認・追及質問が連鎖し、相互行為が“尋問モード”に固定される。","kind":"trigger","source_sheet":"Events list"},"CC03":{"id":"CC03","label_jp":"話題逸脱・唐突転換","label_en":"Derailment or abrupt shift","definition":"直前話題との接続が弱いまま別話題へ急転換し、共同の進行が崩れる。","kind":"trigger","source_sheet":"Events list"},"CC04":{"id":"CC04","label_jp":"修復不成立","label_en":"Repair failure","definition":"誤解・聞き返し等が出ても相互理解に回収されず、会話が停滞／断絶する。","kind":"trigger","source_sheet":"Events list"},"CC05":{"id":"CC05","label_jp":"応答遅延・長い沈黙","label_en":"Response latency or prolonged gap","definition":"問い・呼びかけへの返答が遅い／沈黙が長く、相互行為が間延びする。","kind":"trigger","source_sheet":"Events list"},"DS01":{"id":"DS01","label_jp":"自己開示拒否","label_en":"Refusal to disclose","definition":"聞かれた内容に対し明確に答えない／話さない意思を示す。","kind":"trigger","source_sheet":"Events list"},"DS02":{"id":"DS02","label_jp":"隠蔽の兆候","label_en":"Concealment cues","definition":"回避・曖昧化・矛盾を含み、「隠しているかもしれない」兆候が出る。","kind":"trigger","source_sheet":"Events list"},"DS03":{"id":"DS03","label_jp":"話題すり替え（家族側へ）","label_en":"Deflection to family","definition":"問いへの回答が、家族の行為・責任・人物評価にすり替わる。","kind":"trigger","source_sheet":"Events list"},"DS04":{"id":"DS04","label_jp":"不信・被疑を伴う遮断","label_en":"Suspicious withholding","definition":"被疑・不信の表明を含み、情報共有が遮断される（「信用できない」等）。","kind":"trigger","source_sheet":"Events list"},"MC01":{"id":"MC01","label_jp":"反復（質問・発話）","label_en":"Repetition","definition":"同じ質問・同趣旨発話が短時間で繰り返される。","kind":"trigger","source_sheet":"Events list"},"MC02":{"id":"MC02","label_jp":"想起不全による停滞","label_en":"Retrieval failure stall","definition":"言葉・事実が出てこず停滞し、会話が前に進まない。","kind":"trigger","source_sheet":"Events list"},"MC03":{"id":"MC03","label_jp":"事実不一致の確信","label_en":"Confident mismatch","definition":"客観事実と不一致でも強い確信で主張され、訂正が効きにくい。","kind":"trigger","source_sheet":"Events list"},"MC04":{"id":"MC04","label_jp":"注意散漫・集中切れ","label_en":"Attention drift","definition":"話の途中で注意が逸れ、共同注意が維持できない。","kind":"trigger","source_sheet":"Events list"},"TL01":{"id":"TL01","label_jp":"寡黙・最小応答","label_en":"Minimal speech","definition":"「うん」「はい」等の最小応答に留まり、展開が生まれない。","kind":"trigger","source_sheet":"Events list"},"TL02":{"id":"TL02","label_jp":"理解不能・言語混乱","label_en":"Incoherent speech","definition":"文のつながりが弱い／意味が取りにくい発話が続く。","kind":"trigger","source_sheet":"Events list"},"TL03":{"id":"TL03","label_jp":"文脈不一致応答","label_en":"Non-contingent reply","definition":"質問や直前話題と噛み合わない返答が出る。","kind":"trigger","source_sheet":"Events list"},"AS01":{"id":"AS01","label_jp":"情動の急変","label_en":"Sudden mood shift","definition":"落ち着き→怒り等、感情が短時間に切り替わり会話が不安定化。","kind":"trigger","source_sheet":"Events list"},"AS02":{"id":"AS02","label_jp":"文脈不一致の情動","label_en":"Incongruent affect","definition":"会話内容と釣り合わない感情反応が起き、場がズレる。","kind":"trigger","source_sheet":"Events list"},"AS03":{"id":"AS03","label_jp":"感覚過敏による中断","label_en":"Sensory interruption","definition":"騒音・光・匂い等で会話が止まる／離脱する。","kind":"trigger","source_sheet":"Events list"},"AS04":{"id":"AS04","label_jp":"身体訴えの優勢","label_en":"Somatic preoccupation","definition":"身体症状の訴えが会話の焦点を占拠し、他話題が継続不能になる。","kind":"trigger","source_sheet":"Events list"},"HD01":{"id":"HD01","label_jp":"幻覚への反応","label_en":"Hallucination response","definition":"幻聴・幻視らしき対象に応答する言動が会話を中断／変質させる。","kind":"trigger","source_sheet":"Events list"},"HD02":{"id":"HD02","label_jp":"妄想的主張","label_en":"Delusional claim","definition":"根拠共有が困難な確信に基づく主張が会話の軸になる。","kind":"trigger","source_sheet":"Events list"},"HD03":{"id":"HD03","label_jp":"架空の主体への言及","label_en":"Imagined agent reference","definition":"「誰かが〜している」等、不可視の主体が会話に持ち込まれる。","kind":"trigger","source_sheet":"Events list"},"HD04":{"id":"HD04","label_jp":"非難・疑念の投射","label_en":"Accusatory suspicion","definition":"被疑・非難・責めが家族や周囲に向けられ、関係が緊張する。","kind":"trigger","source_sheet":"Events list"},"AR01":{"id":"AR01","label_jp":"言語的攻撃・威圧","label_en":"Verbal aggression","definition":"罵倒・脅し・威圧で相互行為が安全リスクを帯びる。","kind":"trigger","source_sheet":"Events list"},"AR02":{"id":"AR02","label_jp":"エスカレーション兆候","label_en":"Escalation cue","definition":"声量上昇・語気・身体動作などで悪化兆候が出る。","kind":"trigger","source_sheet":"Events list"},"AR03":{"id":"AR03","label_jp":"会話の強制終了","label_en":"Forced termination","definition":"片方が継続不能として強制終了（退出・遮断）する。","kind":"trigger","source_sheet":"Events list"},"ST01":{"id":"ST01","label_jp":"安定した相互応答","label_en":"Stable reciprocal response","definition":"話題を共有し、複数ターンにわたり相互的な応答が続く。","kind":"trigger","source_sheet":"Events list"},"CM01":{"id":"CM01","label_jp":"カメラ自己像への反応","label_en":"Self-view distraction","definition":"自分の映像を隠す・フィルターを用いる等、画面上の自己像に対応する行為。","kind":"trigger","source_sheet":"Events list"},"MA01":{"id":"MA01","label_jp":"自己認識の表明","label_en":"Self-awareness statement","definition":"自分だけに見える／感じる可能性を言語化し、共同で中断を判断できる。","kind":"trigger","source_sheet":"Events list"},"TV01":{"id":"TV01","label_jp":"特定話題への集中","label_en":"Topic-supported focus","definition":"安全・金銭など特定話題をきっかけに注意が持続する。","kind":"trigger","source_sheet":"Events list"},"R01":{"id":"R01","label_jp":"鎮静化","label_en":"De-escalate","definition":"声量・速度・語調を落とす／安心させる言葉で感情の波を下げる","kind":"move","source_sheet":"Response list"},"R02":{"id":"R02","label_jp":"受容的ホールド","label_en":"Contain & hold","definition":"すぐ結論を出さず、相づち・保留・共感で「場を保つ」／反論しないで継続可能にする","kind":"move","source_sheet":"Response list"},"R03":{"id":"R03","label_jp":"フレーミング軽量化","label_en":"Lighten framing","definition":"話を重くしすぎない言い回しに変える／ユーモア・軽い言換えで温度を下げる","kind":"move","source_sheet":"Response list"},"R04":{"id":"R04","label_jp":"先回りの予防線","label_en":"Pre-emptive cushioning","definition":"先に「こう言うと刺激しそう」を避ける表現にする／地雷回避の言い方を採用","kind":"move","source_sheet":"Response list"},"R05":{"id":"R05","label_jp":"共同注意の再固定","label_en":"Re-ground attention","definition":"注意が散った時に、視点・対象・話題を“いまここ”へ戻す（環境・手順・具体物など）","kind":"move","source_sheet":"Response list"},"R06":{"id":"R06","label_jp":"話題逸らし","label_en":"Redirect topic","definition":"話題を別方向へ切り替えて危険・不快を回避する（意図的なトピックシフト）","kind":"move","source_sheet":"Response list"},"R07":{"id":"R07","label_jp":"同調的合わせ","label_en":"Align/validate (surface)","definition":"内容の真偽を争わず、表面上は同調・肯定して会話継続を優先（“合わせる”）","kind":"move","source_sheet":"Response list"},"R08":{"id":"R08","label_jp":"無視・受け流し","label_en":"Ignore/let pass","definition":"反応すると悪化しそうな時に、あえて拾わず流す（“返さない”を選ぶ）","kind":"move","source_sheet":"Response list"},"P01":{"id":"P01","label_jp":"聞き返し・確認","label_en":"Clarify","definition":"「つまりこう？」など理解確認／聞き取り直し／追加質問で意味を取りに行く","kind":"move","source_sheet":"Response list"},"P02":{"id":"P02","label_jp":"言い換え・要約","label_en":"Rephrase/summarize","definition":"相手の発話を別表現に変えて返す／短くまとめて共通理解を作る","kind":"move","source_sheet":"Response list"},"P03":{"id":"P03","label_jp":"整流（ずれ指摘回避）","label_en":"Gentle realignment","definition":"「違うよ」とは言わず、摩擦を避けつつ会話の筋を戻す（“やんわり整える”）","kind":"move","source_sheet":"Response list"},"P04":{"id":"P04","label_jp":"修復断念（流す）","label_en":"Abandon repair","definition":"修復を試みたが続けると悪化しそうで、あえて修復しない選択に切り替える","kind":"move","source_sheet":"Response list"},"P05":{"id":"P05","label_jp":"第三の参照","label_en":"External reference","definition":"事実・手順・メモ・既存ルールなど“外部のよりどころ”を持ち込んで整合を取る","kind":"move","source_sheet":"Response list"},"P06":{"id":"P06","label_jp":"限定的訂正","label_en":"Minimal correction","definition":"争点を最小化して“ここだけ”を訂正する（全面否定しない）","kind":"move","source_sheet":"Response list"},"P07":{"id":"P07","label_jp":"理解不能の保留","label_en":"Suspend interpretation","definition":"理解できない発話を無理に解釈せず、「今はわからない」と保留して次へ進む","kind":"move","source_sheet":"Response list"},"B01":{"id":"B01","label_jp":"一時中断・距離を取る","label_en":"Pause & distance","definition":"会話を止める／別室へ移動／時間を置くなど、距離で安全性・安定を確保","kind":"move","source_sheet":"Response list"},"B02":{"id":"B02","label_jp":"制限提示（できる/できない）","label_en":"State limits","definition":"「それはできない」「ここまで」など境界を明示して役割過剰を防ぐ","kind":"move","source_sheet":"Response list"},"B03":{"id":"B03","label_jp":"役割切替","label_en":"Role shift","definition":"娘/家族としての役割↔ケア提供者/交渉者としての役割を切り替える（自覚的に）","kind":"move","source_sheet":"Response list"},"B04":{"id":"B04","label_jp":"安全優先の切断","label_en":"Safety termination","definition":"危険やエスカレーション兆候があり、会話を強制終了する（安全を最優先）","kind":"move","source_sheet":"Response list"},"B05":{"id":"B05","label_jp":"外部につなぐ","label_en":"Connect outward","definition":"医療者/支援者/家族外ネットワーク/記録に繋げる（相談・共有・介入依頼）","kind":"move","source_sheet":"Response list"},"B06":{"id":"B06","label_jp":"生活オペ境界（タイミング/場所）","label_en":"Operational boundary","definition":"話すタイミング・場所・長さを設計して生活を守る（“この話は今はしない”等）","kind":"move","source_sheet":"Response list"},"B07":{"id":"B07","label_jp":"記録モードへの切替","label_en":"Switch to documentation","definition":"その場の議論を続けず、ログ・メモに切り替えて被害拡大や自己消耗を抑える（あとで扱う）","kind":"move","source_sheet":"Response list"},"R09":{"id":"R09","label_jp":"相互性を保つ","label_en":"Maintain reciprocity","definition":"相づち・表情・質問を通して対話の往復を保つ。","kind":"move","source_sheet":"Response list"},"P08":{"id":"P08","label_jp":"直接的な問い直し","label_en":"Direct challenge","definition":"理解不成立を直接指摘する。修復になる場合と緊張を高める場合がある。","kind":"move","source_sheet":"Response list"},"B08":{"id":"B08","label_jp":"非対称な映像設定","label_en":"Asymmetric video boundary","definition":"一方だけ映像を表示する等、接続を保ちながら映像負荷を調整する。","kind":"move","source_sheet":"Response list"},"RS01":{"id":"RS01","label_jp":"感情的侵食","label_en":"Emotional erosion","definition":"悲しみ・不安・圧倒が“混ざったまま”後を引く（単発ではなく持続）","kind":"residue","source_sheet":"Burdens list"},"RS02":{"id":"RS02","label_jp":"共感疲労","label_en":"Compassion fatigue","definition":"相手に寄り添うほど消耗し、共感が枯れる・鈍る感覚が残る","kind":"residue","source_sheet":"Burdens list"},"RS03":{"id":"RS03","label_jp":"過覚醒・警戒","label_en":"Hypervigilance","definition":"次の爆発・妄想・中断を見越して常に身構える状態が残る","kind":"residue","source_sheet":"Burdens list"},"RS04":{"id":"RS04","label_jp":"自己否定・罪責","label_en":"Guilt & self-blame","definition":"「言い方が悪かった」「もっとできた」等、自己責任化が後に残る","kind":"residue","source_sheet":"Burdens list"},"RS05":{"id":"RS05","label_jp":"喪失感（会話の喪失）","label_en":"Loss of connection","definition":"“以前の会話/関係”が失われた感覚が残る","kind":"residue","source_sheet":"Burdens list"},"RS06":{"id":"RS06","label_jp":"生活・人生計画の中断","label_en":"Life-plan disruption","definition":"仕事/学業/予定の変更・諦めが積み上がる感覚","kind":"residue","source_sheet":"Burdens list"},"RS07":{"id":"RS07","label_jp":"役割過負荷","label_en":"Role overload","definition":"ケア・調整・判断が一人に集中し、抜けられない感覚が残る","kind":"residue","source_sheet":"Burdens list"},"RS08":{"id":"RS08","label_jp":"不可視化・疎外","label_en":"Invisibility & exclusion","definition":"“必要なのに扱われない/聞かれない” が残る","kind":"residue","source_sheet":"Burdens list"},"RS09":{"id":"RS09","label_jp":"支援システム疲労","label_en":"System navigation fatigue","definition":"どこに相談すれば良いか分からず、手続き・連携の疲れが残る","kind":"residue","source_sheet":"Burdens list"},"RS10":{"id":"RS10","label_jp":"関係の再編ストレス","label_en":"Family system strain","definition":"家族内の力学（誰が担うか、衝突）が長期に残る","kind":"residue","source_sheet":"Burdens list"},"RS11":{"id":"RS11","label_jp":"孤立の固定化","label_en":"Social isolation","definition":"相談できない・人に会えない状態が慢性化して残る","kind":"residue","source_sheet":"Burdens list"},"RS12":{"id":"RS12","label_jp":"判断疲れ","label_en":"Decision burden","definition":"その場での“正解のない判断”が積み上がって残る","kind":"residue","source_sheet":"Burdens list"},"RS13":{"id":"RS13","label_jp":"苛立ち・フラストレーション","label_en":"Irritation & frustration","definition":"会話不成立や反復への苛立ちが通話後に残る。","kind":"residue","source_sheet":"Burdens list"},"RS15":{"id":"RS15","label_jp":"未解決の気がかり","label_en":"Unresolved concern","definition":"その場では悪化を避けても、何が起きていたか分からない感覚が残る。","kind":"residue","source_sheet":"Burdens list"},"PR01":{"id":"PR01","label_jp":"安堵・つながり","label_en":"Relief & connection","definition":"相互的な会話や修復後に、つながりや安心が残る。","kind":"residue","source_sheet":"Burdens list"},"PR02":{"id":"PR02","label_jp":"納得を伴う中断","label_en":"Accepted pause","definition":"中断しても拒絶ではなく、共同判断として納得が残る。","kind":"residue","source_sheet":"Burdens list"}},"events":[{"id":"E01","date":"2026-01-05","daypart":"AM","phase":"Start","call_id":"2026-01-05_AM","trigger_actor":"Mother","trigger_codes":["CC05","MC04"],"move_codes":["R05","P03"],"residue_codes":["RS12","RS15"],"move_actor":"Ayano","quote_jp":"ずっと同じ痛みの繰り返しなのよ","quote_en":"It's the same pain, over and over.","gesture_visible":"Gaze_scan（周囲をキョロキョロ）; Facial_change（怪訝・緊張・こわばり）","gesture_invisible":"Delayed_response（応答遅延）","outcome_jp":"短い応答は得られたが、話題の共有は十分に戻らなかった。","memo_jp":"身体の痛みの話と周囲への注意が重なり、会話の焦点を作ることが難しかった。","summary":"Attention drift; brief response, but shared focus did not fully return.","reading":"Re-grounding maintained contact without resolving uncertainty.","condition":"T2","move":"M1","outcome":"O2","residues":["Z4","Z3"],"actors":["A01","A02"],"media":["D01"],"time_context":"S01","life_context":[],"care_context":[],"corrections":[],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E02","date":"2026-01-05","daypart":"PM","phase":"Start","call_id":"2026-01-05_PM","trigger_actor":"Mother","trigger_codes":["AS04","HD01","MC04"],"move_codes":["R05","P01","B01"],"residue_codes":["RS04","RS05"],"move_actor":"Ayano","quote_jp":"いま、話せない","quote_en":"I can't talk right now.","gesture_visible":"Camera_avoid（カメラを見ない）; Gaze_scan（周囲をキョロキョロ）","gesture_invisible":"Silence_20s（約20秒の沈黙）; Tone_change（トーン変化）","outcome_jp":"会話は成立せず一旦終了した。後から母から謝罪のメッセージが届いた。","memo_jp":"電話が母の静かな時間を乱したかもしれないという申し訳なさと、話を聞いてもらえない寂しさが同時に残った。","summary":"Mother said she couldn't talk right now; the call ended and an apology followed.","reading":"Stating a limit ended the call abruptly and left guilt and a sense of lost connection.","condition":"T7","move":"M8","outcome":"O7","residues":["Z6"],"actors":["A01","A02"],"media":["D01"],"time_context":"S02","life_context":[],"care_context":[],"corrections":["C3","C6"],"evidence_scope":"Selected 7-day corpus","condition_alt":["T2"],"condition_note":""},{"id":"E03","date":"2026-01-06","daypart":"AM","phase":"Start","call_id":"2026-01-06_AM","trigger_actor":"Mother","trigger_codes":["MC04","CC05"],"move_codes":["R05","P01"],"residue_codes":["RS03"],"move_actor":"Ayano","quote_jp":"次に病院へ行くのは金曜","quote_en":"My next hospital visit is Friday.","gesture_visible":"Camera_avoid（カメラを見ない）; Gaze_scan（周囲をキョロキョロ）","gesture_invisible":"Silence_15s（約15秒の沈黙）","outcome_jp":"病院の予定には回答でき、短い会話へ戻った。","memo_jp":"食事と会話を同時に進めるのが難しそうだったため、沈黙を急いで埋めずに待った。","summary":"Hospital timing was answered and brief shared attention returned.","reading":"Clarification restored information, while vigilance remained.","condition":"T2","move":"M1","outcome":"O1","residues":["Z3"],"actors":["A01","A02"],"media":["D01"],"time_context":"S01","life_context":["S03"],"care_context":["S06"],"corrections":[],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E04","date":"2026-01-06","daypart":"AM","phase":"Mid","call_id":"2026-01-06_AM","trigger_actor":"Mother","trigger_codes":["CC05"],"move_codes":["R02"],"residue_codes":["RS12"],"move_actor":"Ayano","quote_jp":"お気に入りのフルーツサンドなの","quote_en":"It's my favourite fruit sandwich.","gesture_visible":"食べ物を口へ近づけたり遠ざけたりする; Gaze_scan（周囲をキョロキョロ）","gesture_invisible":"Silence_30s（約30秒の沈黙）","outcome_jp":"沈黙は続いたが、食事の話題を保ったまま会話を継続できた。","memo_jp":"相手を急かさず待つこと自体が、会話を続けるための調整になった。","summary":"Silence continued, but the food topic was held.","reading":"Waiting itself became relational work and left decision burden.","condition":"T2","move":"M2","outcome":"O2","residues":["Z4"],"actors":["A01","A02"],"media":["D01"],"time_context":"S01","life_context":["S03"],"care_context":[],"corrections":[],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E05","date":"2026-01-06","daypart":"PM","phase":"Start","call_id":"2026-01-06_PM","trigger_actor":"Mother","trigger_codes":["HD04"],"move_codes":["R01","P01"],"residue_codes":["RS15"],"move_actor":"Ayano","quote_jp":"本当に行くの？","quote_en":"Are you really going?","gesture_visible":"Facial_change（不安・疑念）","gesture_invisible":"Tone_change（トーン変化）","outcome_jp":"旅行の話は続いたが、疑念の理由は共有されなかった。","memo_jp":"旅行前には否定的な反応が出ることが多い。今回は理由を尋ねても明確な返答はなかった。","summary":"Travel talk continued, but the reason for suspicion was not shared.","reading":"De-escalation preserved talk without resolving concern.","condition":"T4","move":"M3","outcome":"O2","residues":["Z3"],"actors":["A01","A02"],"media":["D01"],"time_context":"S02","life_context":[],"care_context":[],"corrections":[],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E06","date":"2026-01-06","daypart":"PM","phase":"Mid","call_id":"2026-01-06_PM","trigger_actor":"Mother","trigger_codes":["CC03"],"move_codes":["P03"],"residue_codes":["RS13","RS05"],"move_actor":"Ayano","quote_jp":"","quote_en":"","gesture_visible":"Camera_avoid（カメラを見ない）","gesture_invisible":"","outcome_jp":"一度は元の話へ戻そうとしたが、会話のラリーは回復しなかった。","memo_jp":"私の話への返答が一度で止まり、以前の自炊メニューの提案へ急に移った。","summary":"Gentle realignment did not restore the conversational rally.","reading":"Repair work failed and irritation/loss remained.","condition":"T5","move":"M4","outcome":"O5","residues":["Z5","Z6"],"actors":["A01","A02"],"media":["D01"],"time_context":"S02","life_context":[],"care_context":[],"corrections":["C3"],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E07","date":"2026-01-06","daypart":"PM","phase":"Mid","call_id":"2026-01-06_PM","trigger_actor":"Mother","trigger_codes":["MC04"],"move_codes":["P01"],"residue_codes":["RS03"],"move_actor":"Ayano","quote_jp":"","quote_en":"","gesture_visible":"Gaze_scan（周囲をキョロキョロ）; Facial_change（怪訝・緊張・こわばり）","gesture_invisible":"Breath_change（ため息）","outcome_jp":"部屋への不満には移ったが、元の話題には戻らなかった。","memo_jp":"カメラを見ずに周囲を確認した後、部屋が汚いことや環境への不満を話した。","summary":"The topic shifted to the room and did not return.","reading":"Clarification was attempted, but repair failed and vigilance remained.","condition":"T2","move":"M1","outcome":"O5","residues":["Z3"],"actors":["A01","A02"],"media":["D01"],"time_context":"S02","life_context":[],"care_context":[],"corrections":[],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E08","date":"2026-01-06","daypart":"PM","phase":"Mid","call_id":"2026-01-06_PM","trigger_actor":"Ayano","trigger_codes":["CC04"],"move_codes":["P08"],"residue_codes":["RS13","RS04"],"move_actor":"Ayano","quote_jp":"なぜ会話のラリーが続けられないの？","quote_en":"Why can't we keep a conversation going?","gesture_visible":"","gesture_invisible":"Volume_change（声量変化）; Tone_change（苛立ち）","outcome_jp":"問いかけに返答がなく、緊張が高まった。","memo_jp":"話が通じない感覚から、母を責めるような問い方になった。","summary":"A direct question received no response and tension increased.","reading":"Direct challenge exposed strain rather than repairing it.","condition":"T5","move":"M5","outcome":"O5","residues":["Z5","Z6"],"actors":["A01","A02"],"media":["D01"],"time_context":"S02","life_context":[],"care_context":[],"corrections":["C3"],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E09","date":"2026-01-06","daypart":"PM","phase":"End","call_id":"2026-01-06_PM","trigger_actor":"Mother","trigger_codes":["RECOVERY"],"move_codes":["R06","P03"],"residue_codes":["PR01"],"move_actor":"Ayano","quote_jp":"そういえば、昔ヒヤシンスを学校で育ててたわ","quote_en":"You know, I used to grow hyacinths at school.","gesture_visible":"表情が緩む","gesture_invisible":"Tone_change（穏やかになる）","outcome_jp":"植物の話をきっかけに母が自分の記憶を語り、会話が一時的に回復した。","memo_jp":"安全に話せる植物の話へ移ると、母から小学生時代の記憶が自発的に出てきた。","summary":"A plant topic prompted spontaneous memory and temporary recovery.","reading":"Redirecting to a safe topic reopened reciprocal connection.","condition":"T1","move":"M4","outcome":"O3","residues":["Z1"],"actors":["A01","A02"],"media":["D01"],"time_context":"S02","life_context":[],"care_context":[],"corrections":[],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E10","date":"2026-01-06","daypart":"PM","phase":"End","call_id":"2026-01-06_PM","trigger_actor":"Mother","trigger_codes":["MC04"],"move_codes":["R02","B01"],"residue_codes":["RS12"],"move_actor":"Ayano","quote_jp":"用があるのよ","quote_en":"I've got something to do.","gesture_visible":"Camera_avoid（カメラを見ない）; Frame_out（フレームアウト）; Restlessness（落ち着きのなさ）","gesture_invisible":"Silence_30s（約30秒の沈黙）","outcome_jp":"母の用事を優先して通話を終了した。","memo_jp":"娘からの電話には出てくれるが、長い通話を母も望んでいるとは限らないと感じた。","summary":"Mother's task was prioritised and the call ended.","reading":"Containment led to an operational ending, with judgment still required.","condition":"T7","move":"M2","outcome":"O6","residues":["Z4"],"actors":["A01","A02"],"media":["D01"],"time_context":"S02","life_context":["S04"],"care_context":[],"corrections":["C6"],"evidence_scope":"Selected 7-day corpus","condition_alt":["T2"],"condition_note":""},{"id":"E11","date":"2026-01-07","daypart":"AM","phase":"Start","call_id":"2026-01-07_AM","trigger_actor":"Mother","trigger_codes":["ST01"],"move_codes":["R09"],"residue_codes":["PR01"],"move_actor":"Ayano","quote_jp":"東京と同じだね！","quote_en":"Same as Tokyo!","gesture_visible":"Smile（自然な笑み）","gesture_invisible":"Tone_change（明るい声）","outcome_jp":"天気の比較から自然な会話のラリーが生まれた。","memo_jp":"NYと東京の気温の話に心から驚く反応があり、元気そうだった。","summary":"Weather comparison produced a natural conversational rally.","reading":"Mutual alignment sustained ordinary connection.","condition":"T1","move":"M10","outcome":"O3","residues":["Z1"],"actors":["A01","A02"],"media":["D01"],"time_context":"S01","life_context":[],"care_context":[],"corrections":["C1"],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E12","date":"2026-01-07","daypart":"AM","phase":"Mid","call_id":"2026-01-07_AM","trigger_actor":"Mother","trigger_codes":["ST01"],"move_codes":["R09"],"residue_codes":["PR01"],"move_actor":"Ayano","quote_jp":"","quote_en":"","gesture_visible":"Smile（自然な笑み）","gesture_invisible":"Tone_change（穏やかな声）","outcome_jp":"七草粥と自炊の話が途切れずに続いた。","memo_jp":"同じ自炊の話題でも、双方が落ち着いている時は繰り返しが苦痛にならず、会話がつながった。","summary":"Cooking talk continued without interruption.","reading":"The same everyday topic became connective under stable conditions.","condition":"T1","move":"M10","outcome":"O3","residues":["Z1"],"actors":["A01","A02"],"media":["D01"],"time_context":"S01","life_context":[],"care_context":[],"corrections":["C1"],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E13","date":"2026-01-07","daypart":"PM","phase":"Mid","call_id":"2026-01-07_PM","trigger_actor":"Mother","trigger_codes":["TV01"],"move_codes":["R02","P03"],"residue_codes":["PR01","RS12"],"move_actor":"Ayano","quote_jp":"学校にちゃんと聞いて。お父さんと相談して！","quote_en":"Ask the school properly. Talk it over with your father!","gesture_visible":"Camera_avoid（カメラを見ない）","gesture_invisible":"Tone_change（説教するような強い声）","outcome_jp":"授業料の安全性について一貫して話し、親として具体的な助言をした。","memo_jp":"お金や私の安全に関わる話題では、周囲に気を取られず集中して話すことができた。","summary":"Tuition safety prompted sustained parental advice.","reading":"Connection and decision burden coexisted in one successful exchange.","condition":"T1","move":"M2","outcome":"O3","residues":["Z1","Z4"],"actors":["A01","A02"],"media":["D01"],"time_context":"S02","life_context":[],"care_context":[],"corrections":["C2"],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E14","date":"2026-01-08","daypart":"AM","phase":"Mid","call_id":"2026-01-08_AM","trigger_actor":"Mother","trigger_codes":["ST01"],"move_codes":["R09","P02"],"residue_codes":["PR01"],"move_actor":"Ayano","quote_jp":"","quote_en":"","gesture_visible":"カメラを見て話を聞く; 表情の変化に反応する","gesture_invisible":"Backchannel（相づち）","outcome_jp":"学校や人間関係の話を約30分聞き、親として助言を返した。","memo_jp":"不安定な場面があっても、長い話を理解し、人生経験から助言してくれる時間もある。","summary":"School and relationship talk continued for about 30 minutes with advice.","reading":"Long reciprocal listening shows relational capacity remains present.","condition":"T1","move":"M10","outcome":"O3","residues":["Z1"],"actors":["A01","A02"],"media":["D01"],"time_context":"S01","life_context":[],"care_context":[],"corrections":["C1"],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E15","date":"2026-01-08","daypart":"PM","phase":"Start","call_id":"2026-01-08_PM","trigger_actor":"Mother","trigger_codes":["MC04","CM01"],"move_codes":["R02","B08"],"residue_codes":["RS15"],"move_actor":"Mother","quote_jp":"","quote_en":"","gesture_visible":"Filter_half_face（顔の半分を隠すフィルター）; Camera_avoid（カメラを見ない）","gesture_invisible":"","outcome_jp":"母自身の顔を隠し、Ayanoの映像は表示した状態で会話を継続した。","memo_jp":"自分の顔を見ることへの負担を減らしながら、娘の顔を見る関係は保たれていた。","summary":"Mother hid her own face while keeping Ayano's video visible.","reading":"Changing the modality maintained connection while leaving concern.","condition":"T3","move":"M6","outcome":"O4","residues":["Z3"],"actors":["A01","A02"],"media":["D01","D02","D03"],"time_context":"S02","life_context":[],"care_context":[],"corrections":["C4","C5","C6"],"evidence_scope":"Selected 7-day corpus","condition_alt":["T2"],"condition_note":""},{"id":"E16","date":"2026-01-09","daypart":"AM","phase":"Mid","call_id":"2026-01-09_AM","trigger_actor":"Mother","trigger_codes":["DS01","DS03"],"move_codes":["R02","P01","P07"],"residue_codes":["RS12","RS15"],"move_actor":"Ayano","quote_jp":"そういうものだから","quote_en":"That's just how it is.","gesture_visible":"Camera_avoid（カメラを見ない）","gesture_invisible":"Minimal_response（最小応答）","outcome_jp":"母自身の状態についての具体的な開示は得られず、質問を止めた。","memo_jp":"調子がよい時には話すこともあるが、普段は母自身の話を深く尋ねるとはぐらかすことが多い。","summary":"Questioning stopped after limited disclosure.","reading":"Suspending interpretation respected a boundary but did not resolve concern.","condition":"T6","move":"M7","outcome":"O9","residues":["Z4","Z3"],"actors":["A01","A02"],"media":["D01"],"time_context":"S01","life_context":[],"care_context":[],"corrections":[],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E17","date":"2026-01-09","daypart":"PM","phase":"Mid","call_id":"2026-01-09_PM","trigger_actor":"Mother","trigger_codes":["HD01","MC04"],"move_codes":["R01","P06"],"residue_codes":["RS12","RS03"],"move_actor":"Ayano","quote_jp":"何かが飛んでくる","quote_en":"Something's flying at me.","gesture_visible":"Gaze_scan（周囲をキョロキョロ）; Facial_change（嫌悪・緊張）","gesture_invisible":"","outcome_jp":"Ayanoは『何も飛んでいないから心配しなくて大丈夫』と伝えたが、母の気がかりは残った。","memo_jp":"母は『そうかもしれないけど気になる』と答えた。事実を否定するだけでは注意を戻せなかった。","summary":"Reassurance did not remove Mother's concern.","reading":"Minimal correction maintained the exchange but could not restore attention.","condition":"T8","move":"M3","outcome":"O2","residues":["Z4","Z3"],"actors":["A01","A02"],"media":["D01"],"time_context":"S02","life_context":[],"care_context":[],"corrections":[],"evidence_scope":"Selected 7-day corpus","condition_alt":["T2"],"condition_note":""},{"id":"E18","date":"2026-01-10","daypart":"AM","phase":"End","call_id":"2026-01-10_AM","trigger_actor":"Mother","trigger_codes":["HD01","TL01"],"move_codes":["P08","B01"],"residue_codes":["RS13","RS04"],"move_actor":"Ayano","quote_jp":"なんでもないわよ","quote_en":"It's nothing.","gesture_visible":"Camera_avoid（カメラを見ない）; Gaze_scan（周囲をキョロキョロ）","gesture_invisible":"Silence（長い沈黙）","outcome_jp":"Ayanoが集中できないことへの苛立ちを示し、母は『もう寝るね』と通話を終えた。","memo_jp":"Ayanoに余裕がない時には直接的な問いが増え、会話の終了を早めることがある。","summary":"Mother gave a closed answer and stayed quiet; irritation entered Ayano's response and the call ended early.","reading":"A closed answer under low capacity met a direct question, and the call ended early.","condition":"T6","move":"M5","outcome":"O7","residues":["Z5","Z6"],"actors":["A01","A02"],"media":["D01"],"time_context":"S01","life_context":["S05"],"care_context":[],"corrections":["C3","C6"],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E19","date":"2026-01-10","daypart":"PM","phase":"End","call_id":"2026-01-10_PM","trigger_actor":"Mother","trigger_codes":["HD01","MA01"],"move_codes":["R02","P07","B01"],"residue_codes":["RS03","PR02"],"move_actor":"Ayano","quote_jp":"見えるんだよね","quote_en":"I can see it, you know.","gesture_visible":"視線が周囲へ移る","gesture_invisible":"Tone_change（落ち着いた説明）","outcome_jp":"双方で『一度やめよう』と合意し、対立せず通話を終了した。","memo_jp":"母が自分だけに感じられている可能性を認識している時は、中断を共同で判断できる。","summary":"Both agreed to stop the call without conflict.","reading":"A pause can be jointly negotiated rather than read as failure.","condition":"T8","move":"M7","outcome":"O8","residues":["Z3","Z2"],"actors":["A01","A02"],"media":["D01"],"time_context":"S02","life_context":[],"care_context":[],"corrections":[],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":"She also puts into words that this may be visible only to her."},{"id":"E20","date":"2026-01-11","daypart":"AM","phase":"Mid","call_id":"2026-01-11_AM","trigger_actor":"Mother","trigger_codes":["ST01","B08"],"move_codes":["R09","P01","B08"],"residue_codes":["PR01"],"move_actor":"Mother","quote_jp":"顔が少し疲れてるんじゃない？","quote_en":"You look a little tired, don't you?","gesture_visible":"Mother_video_off（母の映像はオフ）; Ayano_video_on（娘の映像はオン）","gesture_invisible":"","outcome_jp":"母は自分の映像を見せずに、Ayanoの表情の変化には気づき、会話を続けた。","memo_jp":"映像の相互性がなくても、娘の状態を確認したいという関係は維持されていた。","summary":"Mother kept her video off but noticed Ayano's facial change.","reading":"Asymmetric video supported connection without requiring equal visibility.","condition":"T1","move":"M6","outcome":"O4","residues":["Z1"],"actors":["A01","A02"],"media":["D01","D02","D03"],"time_context":"S01","life_context":[],"care_context":[],"corrections":["C1","C4","C5"],"evidence_scope":"Selected 7-day corpus","condition_alt":[],"condition_note":""},{"id":"E21","date":"2026-01-11","daypart":"PM","phase":"Start","call_id":"2026-01-11_PM","trigger_actor":"Mother","trigger_codes":["HD01","HD03","MC04"],"move_codes":["R05","P01","B01"],"residue_codes":["RS03","RS15"],"move_actor":"Mother","quote_jp":"今、何か飛んできているみたい","quote_en":"Something seems to be flying at me right now.","gesture_visible":"Avoiding_gesture（飛来物を避けるような動作）; Video_off（映像オフ）; Hand_phone_to_father（父へ交代）","gesture_invisible":"","outcome_jp":"母との会話は開始直後に止まり、父から状況を確認して通話を終了した。","memo_jp":"挨拶後すぐ映像がオフになり、母が父へ電話を渡した。父の説明と避ける動作から状況を把握した。","summary":"The phone moved to Father and the situation was checked through him.","reading":"Third-person relay enabled situational understanding, while concern remained.","condition":"T8","move":"M9","outcome":"O10","residues":["Z3"],"actors":["A01","A02","A03"],"media":["D01","D02","D04"],"time_context":"S02","life_context":[],"care_context":[],"corrections":["C4"],"evidence_scope":"Selected 7-day corpus","condition_alt":["T2"],"condition_note":""}],"relations":[{"id":"R001","source":"T2","target":"M1","type":"responds_to","events":["E01","E03","E07"],"count":3},{"id":"R002","source":"M1","target":"O2","type":"produces_immediate_outcome","events":["E01"],"count":1},{"id":"R003","source":"O2","target":"Z4","type":"leaves_trace","events":["E01","E04","E17"],"count":3},{"id":"R004","source":"O2","target":"Z3","type":"leaves_trace","events":["E01","E05","E17"],"count":3},{"id":"R005","source":"T7","target":"M8","type":"responds_to","events":["E02"],"count":1},{"id":"R006","source":"M8","target":"O7","type":"produces_immediate_outcome","events":["E02"],"count":1},{"id":"R007","source":"O7","target":"Z6","type":"leaves_trace","events":["E02","E18"],"count":2},{"id":"R008","source":"M1","target":"O1","type":"produces_immediate_outcome","events":["E03"],"count":1},{"id":"R009","source":"O1","target":"Z3","type":"leaves_trace","events":["E03"],"count":1},{"id":"R010","source":"T2","target":"M2","type":"responds_to","events":["E04"],"count":1},{"id":"R011","source":"M2","target":"O2","type":"produces_immediate_outcome","events":["E04"],"count":1},{"id":"R012","source":"T4","target":"M3","type":"responds_to","events":["E05"],"count":1},{"id":"R013","source":"M3","target":"O2","type":"produces_immediate_outcome","events":["E05","E17"],"count":2},{"id":"R014","source":"T5","target":"M4","type":"responds_to","events":["E06"],"count":1},{"id":"R015","source":"M4","target":"O5","type":"produces_immediate_outcome","events":["E06"],"count":1},{"id":"R016","source":"O5","target":"Z5","type":"leaves_trace","events":["E06","E08"],"count":2},{"id":"R017","source":"O5","target":"Z6","type":"leaves_trace","events":["E06","E08"],"count":2},{"id":"R018","source":"M1","target":"O5","type":"produces_immediate_outcome","events":["E07"],"count":1},{"id":"R019","source":"O5","target":"Z3","type":"leaves_trace","events":["E07"],"count":1},{"id":"R020","source":"T5","target":"M5","type":"responds_to","events":["E08"],"count":1},{"id":"R021","source":"M5","target":"O5","type":"produces_immediate_outcome","events":["E08"],"count":1},{"id":"R022","source":"T1","target":"M4","type":"responds_to","events":["E09"],"count":1},{"id":"R023","source":"M4","target":"O3","type":"produces_immediate_outcome","events":["E09"],"count":1},{"id":"R024","source":"O3","target":"Z1","type":"leaves_trace","events":["E09","E11","E12","E13","E14"],"count":5},{"id":"R025","source":"T7","target":"M2","type":"responds_to","events":["E10"],"count":1},{"id":"R026","source":"M2","target":"O6","type":"produces_immediate_outcome","events":["E10"],"count":1},{"id":"R027","source":"O6","target":"Z4","type":"leaves_trace","events":["E10"],"count":1},{"id":"R028","source":"T1","target":"M10","type":"responds_to","events":["E11","E12","E14"],"count":3},{"id":"R029","source":"M10","target":"O3","type":"produces_immediate_outcome","events":["E11","E12","E14"],"count":3},{"id":"R030","source":"T1","target":"M2","type":"responds_to","events":["E13"],"count":1},{"id":"R031","source":"M2","target":"O3","type":"produces_immediate_outcome","events":["E13"],"count":1},{"id":"R032","source":"O3","target":"Z4","type":"leaves_trace","events":["E13"],"count":1},{"id":"R033","source":"T3","target":"M6","type":"responds_to","events":["E15"],"count":1},{"id":"R034","source":"M6","target":"O4","type":"produces_immediate_outcome","events":["E15","E20"],"count":2},{"id":"R035","source":"O4","target":"Z3","type":"leaves_trace","events":["E15"],"count":1},{"id":"R036","source":"T6","target":"M7","type":"responds_to","events":["E16"],"count":1},{"id":"R037","source":"M7","target":"O9","type":"produces_immediate_outcome","events":["E16"],"count":1},{"id":"R038","source":"O9","target":"Z4","type":"leaves_trace","events":["E16"],"count":1},{"id":"R039","source":"O9","target":"Z3","type":"leaves_trace","events":["E16"],"count":1},{"id":"R040","source":"T8","target":"M3","type":"responds_to","events":["E17"],"count":1},{"id":"R041","source":"T6","target":"M5","type":"responds_to","events":["E18"],"count":1},{"id":"R042","source":"M5","target":"O7","type":"produces_immediate_outcome","events":["E18"],"count":1},{"id":"R043","source":"O7","target":"Z5","type":"leaves_trace","events":["E18"],"count":1},{"id":"R044","source":"T8","target":"M7","type":"responds_to","events":["E19"],"count":1},{"id":"R045","source":"M7","target":"O8","type":"produces_immediate_outcome","events":["E19"],"count":1},{"id":"R046","source":"O8","target":"Z3","type":"leaves_trace","events":["E19"],"count":1},{"id":"R047","source":"O8","target":"Z2","type":"leaves_trace","events":["E19"],"count":1},{"id":"R048","source":"T1","target":"M6","type":"responds_to","events":["E20"],"count":1},{"id":"R049","source":"O4","target":"Z1","type":"leaves_trace","events":["E20"],"count":1},{"id":"R050","source":"T8","target":"M9","type":"responds_to","events":["E21"],"count":1},{"id":"R051","source":"M9","target":"O10","type":"produces_immediate_outcome","events":["E21"],"count":1},{"id":"R052","source":"O10","target":"Z3","type":"leaves_trace","events":["E21"],"count":1}],"context":[{"id":"CTX01","observation":"Mother disclosed about a week of poor sleep, an existing prescription, reluctance to rely on sleep medication, one successful limited trial, and preference for occasional use.","linked_events":[],"scope":"Observed contextual episode outside selected 7-day corpus","boundary":"Do not present the exchange as medical advice or evaluate adherence"},{"id":"CTX02","observation":"The selected corpus consists of remote morning and night calls across geographic separation.","linked_events":["E01","E02","E03","E04","E05","E06","E07","E08","E09","E10","E11","E12","E13","E14","E15","E16","E17","E18","E19","E20","E21"],"scope":"Background condition across corpus","boundary":"Does not explain individual outcomes"},{"id":"CTX03","observation":"Camera filters, video-off, and asymmetric visibility were used to reduce self-view exposure while sometimes retaining visual contact with Ayano.","linked_events":["E15","E20","E21"],"scope":"Selected 7-day corpus","boundary":"Avoid assigning one motive to every camera action"},{"id":"CTX04","observation":"In one event Mother handed the phone to Father, who described the immediate situation.","linked_events":["E21"],"scope":"Selected 7-day corpus","boundary":"One event is evidence of possibility, not frequency"},{"id":"CTX05","observation":"Meals, household tasks, and sleep boundaries sometimes coincided with whether a call could continue.","linked_events":["E03","E04","E10","E18"],"scope":"Selected 7-day corpus","boundary":"Co-occurrence should not be represented as clinical causality"}],"outer":{"A01":{"id":"A01","label":"母 / Mother","type":"Actor","boundary":"Representation is based on observable interaction; do not infer internal state"},"A02":{"id":"A02","label":"Ayano","type":"Actor","boundary":"First-person residue belongs to Ayano's account"},"A03":{"id":"A03","label":"父 / Father","type":"Actor","boundary":"One observed handoff; do not generalise frequency"},"D01":{"id":"D01","label":"Remote video / phone connection","type":"Medium","boundary":"Medium shapes what can be seen and heard"},"D02":{"id":"D02","label":"Camera, self-view, filter, video-off controls","type":"Interface condition","boundary":"Do not treat camera avoidance as one fixed cause"},"D03":{"id":"D03","label":"Asymmetric visibility","type":"Boundary configuration","boundary":"Asymmetry may preserve connection rather than indicate failure"},"D04":{"id":"D04","label":"Phone handoff to Father","type":"Handoff channel","boundary":"Shows distributed support in one event"},"S01":{"id":"S01","label":"Morning call rhythm","type":"Temporal rhythm","boundary":"Time is context, not a causal explanation"},"S02":{"id":"S02","label":"Night call rhythm","type":"Temporal rhythm","boundary":"Time is context, not a causal explanation"},"S03":{"id":"S03","label":"Mealtime / concurrent activity","type":"Everyday condition","boundary":"Co-occurrence only; no causal claim"},"S04":{"id":"S04","label":"Household task / competing activity","type":"Everyday condition","boundary":"Ending may be operational rather than rejection"},"S05":{"id":"S05","label":"Sleep / energy boundary","type":"Everyday condition","boundary":"Do not infer symptom severity from sleep alone"},"S06":{"id":"S06","label":"Hospital / health-care schedule","type":"Care touchpoint","boundary":"Shows a touchpoint, not the whole care system"},"S07":{"id":"S07","label":"Medication decision and reluctance","type":"Care touchpoint","boundary":"Do not present Ayano's suggestion as medical advice"},"S08":{"id":"S08","label":"Geographic separation / remote contact","type":"Structural condition","boundary":"Distance explains the medium, not the interaction outcome"}},"corrections":[{"id":"C1","events":["E11","E12","E14","E20"],"change":"regulation code R07 -> R09","reason":"R07 is defined as surface alignment that avoids contesting the truth of what was said. These four events are ordinary reciprocal exchanges (weather, cooking, thirty minutes of listening and advice, noticing a tired face) with nothing being contested. R09 'maintain reciprocity' is the code that matches the definition and was already in the codebook."},{"id":"C2","events":["E13"],"change":"display move M10 -> M2","reason":"E13 is coded R02 (contain and hold) + P03 (gentle realignment) and contains no alignment code at all, yet the workbook filed it under M10 align / reciprocal listening. Mother led with advice while Ayano held the thread, which is the contain-and-wait category."},{"id":"C3","events":["E02","E06","E08","E18"],"change":"residue category Z5 split into Z5 frustration (RS13) and Z6 guilt & loss (RS04 / RS05)","reason":"The single Z5 lane merged three residues of different kind. Splitting them restores the difference between E02 (guilt and loss, no frustration) and E08 / E18 (frustration and guilt)."},{"id":"C4","events":["E15","E20","E21"],"change":"the recorded actor of the primary move is named as Mother","reason":"In these three events the adjustment was made by Mother (hiding her own image, keeping video off, handing the phone to Father). The move column otherwise records Ayano's adjustments; leaving the actor unmarked read as though Ayano had made them."},{"id":"C5","events":["E15","E20"],"change":"move code B06 -> B08","reason":"B06 (a scheduling/place boundary: choosing when and where to talk) was logged for both events. The codebook's B08 'asymmetric video boundary' describes what actually happened (one party's image withheld while the other stays visible), and B08 is already used as a trigger code for E20 in the same log."},{"id":"C6","events":["E02","E10","E15","E18"],"change":"interaction condition re-derived from the written record rather than from the trigger code alone","reason":"The author confirmed that E02 and E18 involve no perceptual content, though both carried the HD01 code. Read from the record: E02 ('I can't talk right now') and E10 ('I've got something to do') are the mother stating a limit; E18 ('It's nothing') is her declining to say how she is, the same pattern as E16; E15 (a filter hiding half her face) is about her own image on screen, not general attention drift. This changes the interaction-condition lane for these four events and reduces the 'something only she can perceive' branch from five events to three (E17, E19, E21) — the only three where the record itself describes perceptual content. See RETHINK.md."}],"changes_vs_workbook":["E01: condition T1 -> T2","E02: condition T2 -> T7","E02: residues ['Z5'] -> ['Z6']","E03: condition T1 -> T2","E04: condition T1 -> T2","E05: condition T3 -> T4","E06: condition T4 -> T5","E06: residues ['Z5'] -> ['Z5', 'Z6']","E07: condition T1 -> T2","E08: condition T4 -> T5","E08: residues ['Z5'] -> ['Z5', 'Z6']","E09: condition T6 -> T1","E10: condition T1 -> T7","E11: condition T6 -> T1","E12: condition T6 -> T1","E13: primary move M10 -> M2","E13: condition T6 -> T1","E14: condition T6 -> T1","E15: condition T1 -> T3","E16: condition T5 -> T6","E17: condition T2 -> T8","E18: condition T2 -> T6","E18: residues ['Z5'] -> ['Z5', 'Z6']","E19: condition T2 -> T8","E20: condition T6 -> T1","E21: condition T2 -> T8"],"audit":[{"ok":true,"message":"E01: trigger codes ['CC05', 'MC04'] match a condition lane"},{"ok":true,"message":"E01: residue codes ['RS12', 'RS15'] map to lanes"},{"ok":true,"message":"E01: at most two residue lanes (['Z4', 'Z3'])"},{"ok":true,"message":"E02: trigger codes ['AS04', 'HD01', 'MC04'] match a condition lane"},{"ok":true,"message":"E02: residue codes ['RS04', 'RS05'] map to lanes"},{"ok":true,"message":"E02: at most two residue lanes (['Z6'])"},{"ok":true,"message":"E03: trigger codes ['MC04', 'CC05'] match a condition lane"},{"ok":true,"message":"E03: residue codes ['RS03'] map to lanes"},{"ok":true,"message":"E03: at most two residue lanes (['Z3'])"},{"ok":true,"message":"E04: trigger codes ['CC05'] match a condition lane"},{"ok":true,"message":"E04: residue codes ['RS12'] map to lanes"},{"ok":true,"message":"E04: at most two residue lanes (['Z4'])"},{"ok":true,"message":"E05: trigger codes ['HD04'] match a condition lane"},{"ok":true,"message":"E05: residue codes ['RS15'] map to lanes"},{"ok":true,"message":"E05: at most two residue lanes (['Z3'])"},{"ok":true,"message":"E06: trigger codes ['CC03'] match a condition lane"},{"ok":true,"message":"E06: residue codes ['RS13', 'RS05'] map to lanes"},{"ok":true,"message":"E06: at most two residue lanes (['Z5', 'Z6'])"},{"ok":true,"message":"E07: trigger codes ['MC04'] match a condition lane"},{"ok":true,"message":"E07: residue codes ['RS03'] map to lanes"},{"ok":true,"message":"E07: at most two residue lanes (['Z3'])"},{"ok":true,"message":"E08: trigger codes ['CC04'] match a condition lane"},{"ok":true,"message":"E08: residue codes ['RS13', 'RS04'] map to lanes"},{"ok":true,"message":"E08: at most two residue lanes (['Z5', 'Z6'])"},{"ok":true,"message":"E09: trigger codes ['RECOVERY'] match a condition lane"},{"ok":true,"message":"E09: residue codes ['PR01'] map to lanes"},{"ok":true,"message":"E09: at most two residue lanes (['Z1'])"},{"ok":true,"message":"E10: trigger codes ['MC04'] match a condition lane"},{"ok":true,"message":"E10: residue codes ['RS12'] map to lanes"},{"ok":true,"message":"E10: at most two residue lanes (['Z4'])"},{"ok":true,"message":"E11: trigger codes ['ST01'] match a condition lane"},{"ok":true,"message":"E11: residue codes ['PR01'] map to lanes"},{"ok":true,"message":"E11: at most two residue lanes (['Z1'])"},{"ok":true,"message":"E12: trigger codes ['ST01'] match a condition lane"},{"ok":true,"message":"E12: residue codes ['PR01'] map to lanes"},{"ok":true,"message":"E12: at most two residue lanes (['Z1'])"},{"ok":true,"message":"E13: trigger codes ['TV01'] match a condition lane"},{"ok":true,"message":"E13: residue codes ['PR01', 'RS12'] map to lanes"},{"ok":true,"message":"E13: at most two residue lanes (['Z1', 'Z4'])"},{"ok":true,"message":"E14: trigger codes ['ST01'] match a condition lane"},{"ok":true,"message":"E14: residue codes ['PR01'] map to lanes"},{"ok":true,"message":"E14: at most two residue lanes (['Z1'])"},{"ok":true,"message":"E15: trigger codes ['MC04', 'CM01'] match a condition lane"},{"ok":true,"message":"E15: residue codes ['RS15'] map to lanes"},{"ok":true,"message":"E15: at most two residue lanes (['Z3'])"},{"ok":true,"message":"E16: trigger codes ['DS01', 'DS03'] match a condition lane"},{"ok":true,"message":"E16: residue codes ['RS12', 'RS15'] map to lanes"},{"ok":true,"message":"E16: at most two residue lanes (['Z4', 'Z3'])"},{"ok":true,"message":"E17: trigger codes ['HD01', 'MC04'] match a condition lane"},{"ok":true,"message":"E17: residue codes ['RS12', 'RS03'] map to lanes"},{"ok":true,"message":"E17: at most two residue lanes (['Z4', 'Z3'])"},{"ok":true,"message":"E18: trigger codes ['HD01', 'TL01'] match a condition lane"},{"ok":true,"message":"E18: residue codes ['RS13', 'RS04'] map to lanes"},{"ok":true,"message":"E18: at most two residue lanes (['Z5', 'Z6'])"},{"ok":true,"message":"E19: trigger codes ['HD01', 'MA01'] match a condition lane"},{"ok":true,"message":"E19: residue codes ['RS03', 'PR02'] map to lanes"},{"ok":true,"message":"E19: at most two residue lanes (['Z3', 'Z2'])"},{"ok":true,"message":"E20: trigger codes ['ST01', 'B08'] match a condition lane"},{"ok":true,"message":"E20: residue codes ['PR01'] map to lanes"},{"ok":true,"message":"E20: at most two residue lanes (['Z1'])"},{"ok":true,"message":"E21: trigger codes ['HD01', 'HD03', 'MC04'] match a condition lane"},{"ok":true,"message":"E21: residue codes ['RS03', 'RS15'] map to lanes"},{"ok":true,"message":"E21: at most two residue lanes (['Z3'])"},{"ok":true,"message":"21 event records read from the raw log (got 21)"},{"ok":true,"message":"14 calls derived from the log (got 14)"},{"ok":true,"message":"7 consecutive days 2026-01-05..2026-01-11 (got 7)"},{"ok":true,"message":"5 CTX context rows, none of them an event"},{"ok":true,"message":"E01 has an English summary"},{"ok":true,"message":"E01 primary move M1 is a known lane"},{"ok":true,"message":"E02 has an English summary"},{"ok":true,"message":"E02 primary move M8 is a known lane"},{"ok":true,"message":"E03 has an English summary"},{"ok":true,"message":"E03 primary move M1 is a known lane"},{"ok":true,"message":"E04 has an English summary"},{"ok":true,"message":"E04 primary move M2 is a known lane"},{"ok":true,"message":"E05 has an English summary"},{"ok":true,"message":"E05 primary move M3 is a known lane"},{"ok":true,"message":"E06 has an English summary"},{"ok":true,"message":"E06 primary move M4 is a known lane"},{"ok":true,"message":"E07 has an English summary"},{"ok":true,"message":"E07 primary move M1 is a known lane"},{"ok":true,"message":"E08 has an English summary"},{"ok":true,"message":"E08 primary move M5 is a known lane"},{"ok":true,"message":"E09 has an English summary"},{"ok":true,"message":"E09 primary move M4 is a known lane"},{"ok":true,"message":"E10 has an English summary"},{"ok":true,"message":"E10 primary move M2 is a known lane"},{"ok":true,"message":"E11 has an English summary"},{"ok":true,"message":"E11 primary move M10 is a known lane"},{"ok":true,"message":"E12 has an English summary"},{"ok":true,"message":"E12 primary move M10 is a known lane"},{"ok":true,"message":"E13 has an English summary"},{"ok":true,"message":"E13 primary move M2 is a known lane"},{"ok":true,"message":"E14 has an English summary"},{"ok":true,"message":"E14 primary move M10 is a known lane"},{"ok":true,"message":"E15 has an English summary"},{"ok":true,"message":"E15 primary move M6 is a known lane"},{"ok":true,"message":"E16 has an English summary"},{"ok":true,"message":"E16 primary move M7 is a known lane"},{"ok":true,"message":"E17 has an English summary"},{"ok":true,"message":"E17 primary move M3 is a known lane"},{"ok":true,"message":"E18 has an English summary"},{"ok":true,"message":"E18 primary move M5 is a known lane"},{"ok":true,"message":"E19 has an English summary"},{"ok":true,"message":"E19 primary move M7 is a known lane"},{"ok":true,"message":"E20 has an English summary"},{"ok":true,"message":"E20 primary move M6 is a known lane"},{"ok":true,"message":"E21 has an English summary"},{"ok":true,"message":"E21 primary move M9 is a known lane"},{"ok":true,"message":"T1 Talk holds, or comes back: 6 events"},{"ok":true,"message":"T2 Attention is on the room, not the call: 4 events"},{"ok":true,"message":"T3 Seeing herself on screen is hard: 1 events"},{"ok":true,"message":"T4 She doubts what I'm telling her: 1 events"},{"ok":true,"message":"T5 The thread breaks and doesn't come back: 2 events"},{"ok":true,"message":"T6 She won't say how she is: 2 events"},{"ok":true,"message":"T7 She sets a limit: 2 events"},{"ok":true,"message":"T8 Something only she can perceive: 3 events"},{"ok":true,"message":"M10 Stay with the topic, listen back: 3 events"},{"ok":true,"message":"M2 Wait without filling the silence: 3 events"},{"ok":true,"message":"M1 Bring focus back, ask again: 3 events"},{"ok":true,"message":"M3 Reassure, correct only lightly: 2 events"},{"ok":true,"message":"M4 Change the subject gently: 2 events"},{"ok":true,"message":"M6 Mother changes what the camera shows: 2 events"},{"ok":true,"message":"M5 Ask directly, out of frustration: 2 events"},{"ok":true,"message":"M7 Stop asking, or agree to stop: 2 events"},{"ok":true,"message":"M8 End the call there: 1 events"},{"ok":true,"message":"M9 Mother hands the phone to Father: 1 events"},{"ok":true,"message":"O3 Back-and-forth held: 5 events"},{"ok":true,"message":"O4 Contact kept, visibility changed: 2 events"},{"ok":true,"message":"O1 Answered, focus returned: 1 events"},{"ok":true,"message":"O2 Talk continued, nothing resolved: 4 events"},{"ok":true,"message":"O9 Asking stopped, little shared: 1 events"},{"ok":true,"message":"O8 Both agreed to stop: 1 events"},{"ok":true,"message":"O6 Call ended for a task: 1 events"},{"ok":true,"message":"O10 Father took over: 1 events"},{"ok":true,"message":"O5 Rally didn't return, tension rose: 3 events"},{"ok":true,"message":"O7 Call ended without warning: 2 events"},{"ok":true,"message":"Z1 Relief, feeling connected: 6 events"},{"ok":true,"message":"Z2 Okay with stopping: 1 events"},{"ok":true,"message":"Z3 Still on guard, still worried: 9 events"},{"ok":true,"message":"Z4 Left deciding alone: 6 events"},{"ok":true,"message":"Z5 Frustration: 3 events"},{"ok":true,"message":"Z6 Guilt, loss of connection: 4 events"},{"ok":false,"message":"every recorded residue code reaches a lane (31 records)"}]};</script>
+<style>/* Type scale and line language for the map. Nine text styles, five stage
+   colours, three line weights — used identically in the page and the figures. */
+.paper { fill: #F6F4F0; }
+text { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; fill: #4A453E; }
+
+.ttl  { font-size: 31px; font-weight: 600; letter-spacing: -.015em; fill: #1A1A1C; }
+.sub  { font-size: 15px; fill: #7C7568; }
+.stage{ font-size: 13.5px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; fill: #1A1A1C; }
+.lanelabel { font-size: 12.5px; fill: #4A453E; }
+.day  { font-size: 13.5px; font-weight: 500; fill: #1A1A1C; letter-spacing: .01em; }
+.calllabel { font-size: 11.5px; fill: #A9A296; letter-spacing: .06em; }
+.eid  { font-size: 11px; fill: #ADA598; font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+.note { font-size: 12px; fill: #8C857A; }
+.run  { font-size: 13px; fill: #7C7568; font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+
+.colrule { stroke: #DCD6CC; stroke-width: 1; }
+.dayband { fill: #EFEBE4; opacity: .5; }
+.daysep  { stroke: #E4DED4; stroke-width: 1; }
+.daycol  { stroke: #E4DED4; stroke-width: 1; }
+
+.callbracket { fill: none; stroke: #CFC8BC; stroke-width: 1; }
+.freq { opacity: .8; }
+
+.fil { fill: none; stroke-width: 1.7; opacity: .74; }
+.fil-glow { fill: none; stroke-width: 9; opacity: .26; }
+.keyline { stroke-width: 1.7; opacity: .74; }
+.bloom { opacity: .66; }
+.bloom.core { opacity: .58; }
+.anchor circle { opacity: .82; }
+.ctxring { fill: none; stroke: #4FB09B; stroke-width: 1; opacity: .85; }
+.rowhit { fill: transparent; cursor: pointer; }
+.lanehead, .lanetick, .reslane, .bloom.agg { cursor: pointer; }
+
+.rib { fill: none; opacity: .46; stroke-linecap: round; }
+.rib-glow { fill: none; opacity: .16; stroke-linecap: round; }
+.agglabel { pointer-events: none; }
+.agglabel .lanelabel { paint-order: stroke; stroke: #F6F4F0; stroke-width: 3.5px; stroke-linejoin: round; }
+
+.reslabel { font-size: 14.5px; fill: #1A1A1C; }
+.reslinebase { opacity: .22; stroke-width: 1; }
+.resid { font-size: 10.5px; fill: #4A453E; pointer-events: none;
+         font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+.coex { fill: none; stroke: #C0B4BC; stroke-width: 1; stroke-dasharray: 3 3; opacity: .75; }
+
+/* three states: default, emphasised, de-emphasised (no effect in the figures) */
+svg.dimmed .fil, svg.dimmed .rib { opacity: .06; }
+svg.dimmed .fil-glow, svg.dimmed .rib-glow { opacity: .025; }
+svg.dimmed .bloom { opacity: .12; }
+svg.dimmed .eid, svg.dimmed .resid, svg.dimmed .anchor, svg.dimmed .ctxring { opacity: .14; }
+svg.dimmed .lanehead, svg.dimmed .lanetick, svg.dimmed .agglabel { opacity: .3; }
+svg .fil.on { opacity: 1; stroke-width: 3; }
+svg .fil-glow.on { opacity: .55; }
+svg .rib.on { opacity: .92; }
+svg .rib-glow.on { opacity: .32; }
+svg .bloom.on { opacity: .95; }
+svg .eid.on, svg .resid.on, svg .anchor.on, svg .ctxring.on { opacity: 1; }
+svg .lanehead.on, svg .lanetick.on, svg .agglabel.on { opacity: 1; }
+svg .lanehead.on .lanelabel { font-weight: 600; fill: #1A1A1C; }
+
+</style>
+<script type="module">/* RSD15 L2 accumulation map — layout + SVG generation.
+ *
+ * Pure functions: dataset (built by scripts/build_dataset.py from the workbook)
+ * in, SVG markup out. No DOM access, so the same module drives the interactive
+ * page and the static figures exported by scripts/build.mjs.
+ *
+ * ORDERING RULE (one axis, used by every view)
+ *   Within all four stages, categories are ordered by CONTINUITY OF CONTACT:
+ *   from the exchange being sustained (left / top) to the exchange being
+ *   interrupted (right / bottom). It orders kind, not quality — a negotiated
+ *   pause is not "worse" than an unresolved continuation. The same axis in all
+ *   four stages lets a filament's height be read directly, and it keeps the
+ *   perceptual-disruption branch adjacent so its fan stays legible.
+ *
+ * PLACEMENT (no hand-placed coordinates)
+ *   - Stage x is fixed; inside a stage each category owns a lane at a fixed x,
+ *     positioned by its rank on the continuity axis.
+ *   - Field view: row y = chronological position; rows bracket into their call.
+ *   - Branch view: node y = the same continuity rank (not a force layout).
+ *   - Residue view: x = day, y = residue lane.
+ *   - Category labels are placed by a greedy collision-free stagger pass.
+ *   - Bloom radius, filament weight and the frequency rule encode RECURRENCE
+ *     COUNT ONLY.
+ */
+
+const PALETTE = {
+  paper: '#F6F4F0', ink: '#1A1A1C', body: '#4A453E', muted: '#7C7568', faint: '#A9A296',
+  rule: '#DCD6CC', condition: '#5C7FD6', move: '#EE8446', outcome: '#E2B03C',
+  residue: '#C874AE', context: '#4FB09B',
+};
+
+/* Continuity axis (sustained → interrupted) and every label now come from
+   data/l2-dataset.json, which is built from the raw log by
+   scripts/build_dataset.py. Nothing about the categories is defined here. */
+
+/* One hue per stage, varied slightly by continuity rank so neighbouring lanes
+   stay separable. Hue difference separates categories; it does not rank them. */
+const RAMP = {
+  T: ['#6E96E2', '#5C7FD6', '#5A76CE', '#5C6FC6', '#5F68BE', '#5D61B6'],
+  M: ['#F2A268', '#EF9455', '#EE8446', '#EA7A3E', '#E77038', '#E56A3C',
+      '#E16244', '#DC5C4C', '#D75754', '#D2525C'],
+  O: ['#EBC468', '#E7BB54', '#E2B03C', '#DEA736', '#D99E32', '#D4952E',
+      '#CF8C2C', '#CA842A', '#C57C28', '#C07426'],
+  Z: ['#EE93A6', '#E185B6', '#D079B4', '#BC74BE', '#A671C6', '#8F6ECC'],
+};
+const FAMILY = { T: 'condition', M: 'move', O: 'outcome', Z: 'residue' };
+
+/* Stage geometry. Widths are proportional to lane counts so the lane pitch is
+   near-constant across the whole figure. */
+const COLUMNS = {
+  T: { x0: 232, x1: 432, title: 'Interaction condition' },
+  M: { x0: 508, x1: 858, title: 'Relational move' },
+  O: { x0: 934, x1: 1264, title: 'Immediate outcome' },
+  Z: { x0: 1340, x1: 1520, title: 'Post-interaction residue' },
+};
+
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const dayLabel = (iso) => {
+  const d = new Date(iso + 'T12:00:00Z');
+  return `${DAY_NAMES[d.getUTCDay()]} · ${iso.slice(8)} Jan`;
+};
+
+/* ---------------------------------------------------------------- model -- */
+function model(data) {
+  const events = data.events.slice().sort((a, b) => Number(a.id.slice(1)) - Number(b.id.slice(1)));
+  const order = data.order, lanes = {};
+  for (const fam of ['T', 'M', 'O', 'Z']) {
+    const col = COLUMNS[fam], n = order[fam].length;
+    order[fam].forEach((id, i) => {
+      const x = n === 1 ? (col.x0 + col.x1) / 2 : col.x0 + (col.x1 - col.x0) * i / (n - 1);
+      lanes[id] = { id, index: i, x, color: RAMP[fam][i % RAMP[fam].length],
+                    family: FAMILY[fam], label: data.categories[id].label };
+    });
+  }
+  const nodes = {};
+  for (const [id, c] of Object.entries(data.categories))
+    nodes[id] = { id, label: c.label, type: data.stages[c.stage].title, count: c.count,
+                  events: c.events, boundary: c.rationale };
+  for (const [id, o] of Object.entries(data.outer || {}))
+    nodes[id] = { id, label: o.label, type: o.type, count: 0, events: [], boundary: o.boundary };
+
+  const calls = [];
+  for (const e of events) {
+    const last = calls[calls.length - 1];
+    if (last && last.id === e.call_id) last.events.push(e.id);
+    else calls.push({ id: e.call_id, date: e.date, daypart: e.daypart, events: [e.id] });
+  }
+  const days = [...new Set(events.map((e) => e.date))];
+  return { events, lanes, order, calls, days, nodes, relations: data.relations,
+           context: data.context, meta: data.meta, categories: data.categories,
+           codebook: data.codebook, stages: data.stages };
+}
+
+/* --------------------------------------------------------------- helpers -- */
+const flow = (pts) => {
+  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], mx = (x0 + x1) / 2;
+    d += ` C${mx.toFixed(1)},${y0.toFixed(1)} ${mx.toFixed(1)},${y1.toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
+  }
+  return d;
+};
+const bloom = (x, y, r, color, cls = '', attrs = '') =>
+  `<circle class="bloom ${cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${color}" ${attrs}/>`;
+
+/* greedy word wrap to at most two lines of ~CH characters */
+const CH = 17;
+function wrap(text) {
+  const words = text.split(/\s+/), lines = [''];
+  for (const w of words) {
+    const t = (lines[lines.length - 1] + ' ' + w).trim();
+    if (t.length <= CH || !lines[lines.length - 1]) lines[lines.length - 1] = t;
+    else lines.push(w);
+  }
+  if (lines.length > 2) { lines[1] = lines.slice(1).join(' '); lines.length = 2; }
+  return lines;
+}
+const textWidth = (lines) => Math.max(...lines.map((l) => l.length)) * 6.4 + 12;
+
+/* Label band: one label per lane, all set at the same angle and the same
+   offset from their tick, so the labels read as one ordered diagonal rank.
+   No stagger, no leaders — position is given by the tick alone. */
+const ANGLE = 50;
+function labelBand(m, headY) {
+  const items = [];
+  for (const fam of ['T', 'M', 'O', 'Z'])
+    for (const id of m.order[fam]) items.push({ id, x: m.lanes[id].x, label: m.lanes[id].label });
+  const longest = Math.max(...items.map((i) => i.label.length));
+  const height = longest * 6.05 * Math.sin(ANGLE * Math.PI / 180) + 26;
+  const tickY = Math.round(headY + height);
+  const svg = items.map((it) => `<g class="lanehead" data-node="${it.id}" transform="translate(${it.x.toFixed(1)},${tickY - 16}) rotate(-${ANGLE})">
+      <text class="lanelabel" x="10" y="4">${esc(it.label)}</text></g>`).join('');
+  return { svg, tickY };
+}
+
+/* Frequency rule: one aligned mark per lane, length ∝ recurrence. */
+function ticks(m, y) {
+  let svg = '';
+  for (const fam of ['T', 'M', 'O', 'Z'])
+    for (const id of m.order[fam]) {
+      const L = m.lanes[id], n = m.nodes[id].count, w = 5 + n * 3.4;
+      svg += `<g class="lanetick" data-node="${id}">
+        <circle cx="${L.x.toFixed(1)}" cy="${y}" r="3.6" fill="${L.color}"/>
+        <rect class="freq" x="${(L.x - w / 2).toFixed(1)}" y="${y + 9}" width="${w.toFixed(1)}" height="2.4" rx="1.2" fill="${L.color}"/>
+      </g>`;
+    }
+  return svg;
+}
+
+function defs(m) {
+  let g = '';
+  for (const id of Object.keys(m.lanes)) {
+    const c = m.lanes[id].color;
+    g += `<radialGradient id="rg-${id}"><stop offset="0" stop-color="${c}" stop-opacity=".95"/>` +
+         `<stop offset=".55" stop-color="${c}" stop-opacity=".42"/>` +
+         `<stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>`;
+  }
+  return `<defs>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="haze" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="22"/></filter>
+    ${g}</defs>`;
+}
+
+/* =========================================================== FIELD VIEW === */
+function fieldView(m, { chrome = true, legend = true } = {}) {
+  const W = 1680, ROW = 52, GUT = 208;
+  const HEAD = chrome ? 60 : 34;
+  const band = labelBand(m, HEAD + 26);
+  const TOP = band.tickY + 54;
+  const rowY = {}; m.events.forEach((e, i) => { rowY[e.id] = TOP + i * ROW; });
+  const lastY = rowY[m.events[m.events.length - 1].id];
+  const footerShown = chrome && legend;
+  const H = lastY + (footerShown ? 132 : 40);
+  const drift = (id, amp) => {
+    const L = m.lanes[id], n = m.order[id[0]].length;
+    return (n < 2 ? 0 : (L.index / (n - 1) - 0.5) * 2) * amp;
+  };
+
+  /* stage headings */
+  let heads = '';
+  for (const fam of ['T', 'M', 'O', 'Z']) {
+    const col = COLUMNS[fam];
+    heads += `<text class="stage" x="${((col.x0 + col.x1) / 2).toFixed(1)}" y="${HEAD}" text-anchor="middle">${col.title}</text>`;
+  }
+
+  /* day bands, call brackets, gutter */
+  let bands = '', gutter = '';
+  m.days.forEach((d, i) => {
+    const rows = m.events.filter((e) => e.date === d);
+    const y0 = rowY[rows[0].id] - ROW / 2, y1 = rowY[rows[rows.length - 1].id] + ROW / 2;
+    if (i % 2 === 1) bands += `<rect class="dayband" x="${GUT - 16}" y="${y0}" width="${W - GUT - 24}" height="${y1 - y0}"/>`;
+    bands += `<line class="daysep" x1="40" x2="${W - 40}" y1="${y0.toFixed(1)}" y2="${y0.toFixed(1)}"/>`;
+    gutter += `<text class="day" x="40" y="${((y0 + y1) / 2 + 4).toFixed(1)}">${dayLabel(d)}</text>`;
+  });
+  for (const c of m.calls) {
+    const rows = c.events.map((id) => rowY[id]);
+    const y0 = rows[0] - 16, y1 = rows[rows.length - 1] + 16;
+    gutter += `<g class="call">
+      <path class="callbracket" d="M${GUT - 46},${y0} L${GUT - 52},${y0} L${GUT - 52},${y1} L${GUT - 46},${y1}"/>
+      <text class="calllabel" x="${GUT - 60}" y="${((y0 + y1) / 2 + 3.5).toFixed(1)}" text-anchor="end">${c.daypart}</text></g>`;
+  }
+
+  /* filaments */
+  let glow = '', lines = '', dots = '', marks = '';
+  for (const e of m.events) {
+    const y = rowY[e.id];
+    const T = m.lanes[e.condition], MV = m.lanes[e.move], O = m.lanes[e.outcome];
+    const yT = y + drift(e.condition, 13), yM = y + drift(e.move, 13), yO = y + drift(e.outcome, 8);
+    e.residues.forEach((z, k) => {
+      const Z = m.lanes[z];
+      const yz = y + drift(z, 11) + (e.residues.length > 1 ? (k === 0 ? -7 : 7) : 0);
+      const pts = [[T.x, yT], [MV.x, yM], [O.x, yO], [Z.x, yz]];
+      const gid = `lg-${e.id}-${z}`;
+      glow += `<linearGradient id="${gid}" gradientUnits="userSpaceOnUse" x1="${T.x}" x2="${Z.x}">
+        <stop offset="0" stop-color="${T.color}"/><stop offset=".30" stop-color="${MV.color}"/>
+        <stop offset=".60" stop-color="${O.color}"/><stop offset="1" stop-color="${Z.color}"/></linearGradient>
+        <path class="fil-glow" d="${flow(pts)}" stroke="url(#${gid})"/>`;
+      lines += `<path class="fil" data-event="${e.id}" d="${flow(pts)}" stroke="url(#${gid})"/>`;
+      dots += bloom(Z.x, yz, 25, `url(#rg-${z})`, 'z', `data-event="${e.id}" data-node="${z}"`);
+      marks += `<g class="anchor" data-event="${e.id}" data-node="${z}"><circle cx="${Z.x.toFixed(1)}" cy="${yz.toFixed(1)}" r="3" fill="${Z.color}"/></g>`;
+    });
+    // all four stages read as one visual system: equal bloom size, equal opacity.
+    // nothing about size or shade here carries meaning beyond "this happened".
+    dots += bloom(T.x, yT, 25, `url(#rg-${e.condition})`, 't', `data-event="${e.id}" data-node="${e.condition}"`)
+          + bloom(MV.x, yM, 25, `url(#rg-${e.move})`, 'm', `data-event="${e.id}" data-node="${e.move}"`)
+          + bloom(O.x, yO, 25, `url(#rg-${e.outcome})`, 'o', `data-event="${e.id}" data-node="${e.outcome}"`);
+    marks += `<g class="anchor" data-event="${e.id}" data-node="${e.condition}"><circle cx="${T.x.toFixed(1)}" cy="${yT.toFixed(1)}" r="3" fill="${T.color}"/></g>
+      <g class="anchor" data-event="${e.id}" data-node="${e.move}"><circle cx="${MV.x.toFixed(1)}" cy="${yM.toFixed(1)}" r="3" fill="${MV.color}"/></g>
+      <g class="anchor" data-event="${e.id}" data-node="${e.outcome}"><circle cx="${O.x.toFixed(1)}" cy="${yO.toFixed(1)}" r="3" fill="${O.color}"/></g>`;
+    marks += `<text class="eid" data-event="${e.id}" x="${GUT - 24}" y="${(y + 3.5).toFixed(1)}" text-anchor="end">${e.id}</text>`;
+  }
+
+  let hits = '';
+  for (const e of m.events)
+    hits += `<rect class="rowhit" data-event="${e.id}" x="40" y="${rowY[e.id] - ROW / 2}" width="${W - 80}" height="${ROW}"/>`;
+
+  let footer = '';
+  if (footerShown) {
+    const yF = lastY + 58;
+    const barY = 2, barH = 2.4;
+    footer = `<line class="colrule" x1="40" x2="${W - 40}" y1="${yF - 26}" y2="${yF - 26}"/>
+      <g class="key" transform="translate(40,${yF})">
+        <path class="fil keyline" d="M0,-4 C22,-4 22,-4 44,-4" stroke="${PALETTE.condition}"/>
+        <circle cx="22" cy="-4" r="3.4" fill="${PALETTE.condition}"/>
+        <text class="note" x="56" y="0">One line is one recorded event, followed across the four stages.</text>
+
+        <circle cx="18" cy="34" r="3" fill="${PALETTE.muted}"/>
+        <rect class="freq" x="10" y="${34 + barY}" width="7" height="${barH}" rx="1.2" fill="${PALETTE.muted}"/>
+        <text class="note" x="30" y="38">recorded once</text>
+        <circle cx="180" cy="34" r="3" fill="${PALETTE.muted}"/>
+        <rect class="freq" x="172" y="${34 + barY}" width="26" height="${barH}" rx="1.2" fill="${PALETTE.muted}"/>
+        <text class="note" x="204" y="38">recorded several times — the mark under each label grows with its count</text>
+      </g>
+      <text class="note" x="${W - 40}" y="${yF}" text-anchor="end">Recurrence, not severity: length and bloom size show how often something</text>
+      <text class="note" x="${W - 40}" y="${yF + 16}" text-anchor="end">was recorded — never how serious, distressing, or important it was.</text>`;
+  }
+
+  return { W, H, rowY, TOP, ROW,
+    svg: `${defs(m)}
+      <rect class="paper" x="0" y="0" width="${W}" height="${H}"/>
+      <g class="bands">${bands}</g>
+      <g class="heads">${heads}${band.svg}${ticks(m, band.tickY)}</g>
+      <g class="gutter">${gutter}</g>
+      <g class="glowlayer" filter="url(#soft)">${glow}</g>
+      <g class="bloomlayer" filter="url(#haze)">${dots}</g>
+      <g class="linelayer">${lines}</g>
+      <g class="coredots">${dots.replace(/class="bloom /g, 'class="bloom core ')}</g>
+      <g class="marks">${marks}</g>
+      <g class="hits">${hits}</g>
+      ${footer}` };
+}
+
+/* ========================================================== BRANCH VIEW === */
+function branchView(m) {
+  const W = 1680, TOP = 210, BOT = 900, H = 980;
+  const Y = {};
+  for (const fam of ['T', 'M', 'O', 'Z']) {
+    const list = m.order[fam], n = list.length;
+    list.forEach((id, i) => { Y[id] = TOP + (BOT - TOP) * (n === 1 ? .5 : i / (n - 1)); });
+  }
+  let heads = '';
+  for (const fam of ['T', 'M', 'O', 'Z']) {
+    const col = COLUMNS[fam];
+    heads += `<text class="stage" x="${((col.x0 + col.x1) / 2).toFixed(1)}" y="60" text-anchor="middle">${col.title}</text>`;
+  }
+  const core = m.relations.filter((r) => ['responds_to', 'produces_immediate_outcome', 'leaves_trace'].includes(r.type));
+  let glow = '', ribbons = '', nodes = '', labels = '';
+  for (const r of core) {
+    const a = m.lanes[r.source], b = m.lanes[r.target];
+    if (!a || !b) continue;
+    const d = flow([[a.x, Y[r.source]], [b.x, Y[r.target]]]);
+    const gid = `bg-${r.id}`, w = 2 + r.count * 3.2;
+    glow += `<linearGradient id="${gid}" gradientUnits="userSpaceOnUse" x1="${a.x}" x2="${b.x}">
+      <stop offset="0" stop-color="${a.color}"/><stop offset="1" stop-color="${b.color}"/></linearGradient>
+      <path class="rib-glow" d="${d}" stroke="url(#${gid})" stroke-width="${w + 10}"/>`;
+    ribbons += `<path class="rib" data-relation="${r.id}" data-events="${r.events.join(',')}" d="${d}" stroke="url(#${gid})" stroke-width="${w}"/>`;
+  }
+  for (const fam of ['T', 'M', 'O', 'Z'])
+    for (const id of m.order[fam]) {
+      const L = m.lanes[id], n = m.nodes[id], y = Y[id], r = 13 + Math.sqrt(n.count) * 11;
+      nodes += bloom(L.x, y, r, `url(#rg-${id})`, 'agg', `data-node="${id}"`);
+      const lines = wrap(L.label), right = fam !== 'Z';
+      labels += `<g class="agglabel" data-node="${id}">
+        ${lines.map((l, i) => `<text class="lanelabel" x="${(L.x + (right ? 1 : -1) * (r + 10)).toFixed(1)}" y="${(y - (lines.length - 1) * 6 + i * 12 + 4).toFixed(1)}" text-anchor="${right ? 'start' : 'end'}">${esc(l)}</text>`).join('')}</g>`;
+    }
+  return { W, H, svg: `${defs(m)}
+    <rect class="paper" x="0" y="0" width="${W}" height="${H}"/>
+    <g class="heads">${heads}</g>
+    <g class="glowlayer" filter="url(#soft)">${glow}</g>
+    <g class="bloomlayer" filter="url(#haze)">${nodes}</g>
+    <g class="linelayer">${ribbons}</g>
+    <g class="aggnodes">${nodes.replace(/class="bloom /g, 'class="bloom core ')}</g>
+    <g class="agglabels">${labels}</g>` };
+}
+
+/* ========================================================= RESIDUE VIEW === */
+function residueView(m) {
+  const W = 1680, X0 = 380, X1 = 1520, TOP = 230;
+  const NZ = m.order.Z.length, STEP = Math.min(112, 560 / Math.max(1, NZ - 1)), H = TOP + (NZ - 1) * STEP + 230;
+  const dayX = {}; m.days.forEach((d, i) => { dayX[d] = X0 + (X1 - X0) * i / (m.days.length - 1); });
+  const laneY = {}; m.order.Z.forEach((id, i) => { laneY[id] = TOP + i * STEP; });
+  let axis = '', blooms = '', links = '', heads = '', ledger = '';
+  m.days.forEach((d) => {
+    axis += `<line class="daycol" x1="${dayX[d].toFixed(1)}" x2="${dayX[d].toFixed(1)}" y1="${TOP - 54}" y2="${(TOP + (NZ - 1) * STEP + 64).toFixed(1)}"/>
+      <text class="day" x="${dayX[d].toFixed(1)}" y="${TOP - 72}" text-anchor="middle">${dayLabel(d)}</text>`;
+  });
+  for (const id of m.order.Z) {
+    const n = m.nodes[id], c = m.lanes[id].color, y = laneY[id];
+    heads += `<g class="reslane" data-node="${id}">
+      <text class="reslabel" x="330" y="${(y + 4).toFixed(1)}" text-anchor="end">${esc(n.label)}</text>
+      <rect class="freq" x="${(330 - (5 + n.count * 3.4)).toFixed(1)}" y="${y + 14}" width="${(5 + n.count * 3.4).toFixed(1)}" height="2.4" rx="1.2" fill="${c}"/>
+      <line class="reslinebase" x1="352" x2="${X1 + 40}" y1="${y}" y2="${y}" stroke="${c}"/></g>`;
+  }
+  const perCell = {};
+  for (const e of m.events) for (const z of e.residues) {
+    const key = `${e.date}|${z}`; (perCell[key] = perCell[key] || []).push(e);
+  }
+  for (const [key, list] of Object.entries(perCell)) {
+    const [d, z] = key.split('|'), y = laneY[z];
+    list.forEach((e, i) => {
+      const x = dayX[d] + (i - (list.length - 1) / 2) * 30;
+      blooms += bloom(x, y, 20, `url(#rg-${z})`, 'res', `data-event="${e.id}" data-node="${z}"`);
+      blooms += `<text class="resid" data-event="${e.id}" x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="middle">${e.id.slice(1)}</text>`;
+    });
+  }
+  for (const e of m.events) if (e.residues.length === 2) {
+    const [a, b] = e.residues, x = dayX[e.date];
+    links += `<path class="coex" data-event="${e.id}" d="${flow([[x, laneY[a]], [x + 44, (laneY[a] + laneY[b]) / 2], [x, laneY[b]]])}"/>`;
+  }
+  const yL = TOP + (NZ - 1) * STEP + 130;
+  ledger += `<text class="note" x="330" y="${yL}" text-anchor="end">residue records to date</text>`;
+  let run = 0;
+  m.days.forEach((d) => {
+    run += m.events.filter((e) => e.date === d).reduce((s, e) => s + e.residues.length, 0);
+    ledger += `<text class="run" x="${dayX[d].toFixed(1)}" y="${yL}" text-anchor="middle">${run}</text>`;
+  });
+  return { W, H, svg: `${defs(m)}
+    <rect class="paper" x="0" y="0" width="${W}" height="${H}"/>
+    <g class="axis">${axis}</g><g class="heads">${heads}</g>
+    <g class="coexlayer">${links}</g>
+    <g class="bloomlayer" filter="url(#haze)">${blooms}</g>
+    <g class="reslayer">${blooms}</g>
+    <g class="ledger">${ledger}</g>` };
+}
+
+/* =============================================================== TITLE ==== */
+function titleSvg(m, W, sub) {
+  return `<text class="ttl" x="40" y="52">Twenty-One Interactional Events</text>
+    <text class="sub" x="40" y="80">${esc(sub)}</text>`;
+}
+
+/* Interaction layer: mounting, one hover card, one detail panel, zoom/pan.
+   Geometry comes from l2-core.js; nothing here computes positions. */
+
+const DATA = window.__L2__;
+const M = model(DATA);
+const byId = Object.fromEntries(M.events.map((e) => [e.id, e]));
+const STAGE = { condition: 'Interaction condition', move: 'Relational move',
+                outcome: 'Immediate outcome', residue: 'Post-interaction residue' };
+const VIEWS = {
+  field:   { build: () => fieldView(M, { chrome: false }), label: 'Seven days' },
+  branch:  { build: () => branchView(M),  label: 'Branching' },
+  residue: { build: () => residueView(M), label: 'Residue' },
+};
+let current = 'field', built = {}, sel = null, tf = { k: 1, x: 0, y: 0 };
+
+const stage = document.getElementById('stage');
+const panel = document.getElementById('panel');
+const card = document.getElementById('card');
+
+function mount(name) {
+  current = name;
+  if (!built[name]) built[name] = VIEWS[name].build();
+  const v = built[name];
+  stage.innerHTML = `<svg id="svg" viewBox="0 0 ${v.W} ${v.H}" preserveAspectRatio="xMidYMin meet"><g id="viewport">${v.svg}</g></svg>`;
+  document.querySelectorAll('.tab').forEach((b) => b.classList.toggle('active', b.dataset.view === name));
+  tf = { k: 1, x: 0, y: 0 }; applyTf();
+  paint(); wire();
+}
+const applyTf = () => document.getElementById('viewport')
+  .setAttribute('transform', `translate(${tf.x},${tf.y}) scale(${tf.k})`);
+
+/* ------------------------------------------------------------ selection -- */
+const eventsOf = (t) => !t ? null : t.kind === 'event' ? new Set([t.id])
+  : new Set((M.nodes[t.id]?.events || []).filter((x) => x.startsWith('E')));
+
+function paint() {
+  const svg = document.getElementById('svg'); if (!svg) return;
+  const set = eventsOf(sel);
+  svg.classList.toggle('dimmed', !!sel);
+  svg.querySelectorAll('[data-event],[data-node],[data-events]').forEach((el) => {
+    let on = false;
+    if (set) {
+      const ev = el.getAttribute('data-event'), evs = el.getAttribute('data-events'),
+            nd = el.getAttribute('data-node');
+      if (ev && set.has(ev)) on = true;
+      if (evs && evs.split(',').some((x) => set.has(x))) on = true;
+      if (nd && sel.kind === 'node' && nd === sel.id) on = true;
+    }
+    el.classList.toggle('on', on);
+  });
+}
+function select(kind, id) { sel = id ? { kind, id } : null; paint(); renderPanel(); }
+window.__reset = () => { sel = null; tf = { k: 1, x: 0, y: 0 }; applyTf(); paint(); renderPanel(); hideCard(); };
+
+/* ---------------------------------------------------------------- panel -- */
+function stageRow(role, id, note) {
+  const n = M.nodes[id]; if (!n) return '';
+  return `<div class="srow"><span class="sdot" style="background:${M.lanes[id].color}"></span>
+    <span class="srole">${role}</span>
+    <a class="sval" href="#" data-node="${id}">${n.label}</a>
+    ${note ? `<span class="snote">${note}</span>` : ''}</div>`;
+}
+function renderPanel() {
+  if (!sel) { panel.innerHTML = restPanel(); return; }
+  if (sel.kind === 'event') {
+    const e = byId[sel.id];
+    const call = M.calls.find((c) => c.id === e.call_id);
+    const pos = call.events.length > 1 ? ` · ${call.events.indexOf(e.id) + 1} of ${call.events.length} in this call` : '';
+    const ctx = [...e.life_context, ...e.care_context, ...e.media.filter((d) => d !== 'D01')];
+    panel.innerHTML = `<div class="pk">Event</div>
+      <div class="pid">${e.id}</div>
+      <div class="pmeta">${dayLabel(e.date)} · ${e.daypart}${pos}</div>
+      <p class="psum">${e.summary}</p>
+      ${e.quote_en ? `<blockquote class="quote">“${e.quote_en}”</blockquote>` : ''}
+      <div class="stages">
+        ${stageRow('Condition', e.condition, [
+            e.condition_note || '',
+            (e.condition_alt || []).length
+              ? 'also touches ' + e.condition_alt.map((c) => M.nodes[c].label.toLowerCase()).join(', ') : ''
+          ].filter(Boolean).join(' \u00b7 '))}
+        ${stageRow('Move', e.move, e.move_actor === 'Mother' ? 'made by Mother' : '')}
+        ${stageRow('Outcome', e.outcome, '')}
+        ${e.residues.map((z, i) => stageRow(i ? '' : 'Residue', z, '')).join('')}
+      </div>
+      ${ctx.length ? `<div class="pk">Situating condition</div>
+        <p class="pnote">${ctx.map((c) => M.nodes[c].label).join(' · ')}</p>` : ''}
+      <div class="pfoot">L1 card ${e.id}</div>
+      <button class="reset" onclick="window.__reset()">Clear</button>`;
+  } else {
+    const n = M.nodes[sel.id], L = M.lanes[sel.id];
+    panel.innerHTML = `<div class="pk">${L ? STAGE[L.family] : n.type}</div>
+      <div class="pid small">${n.label}</div>
+      <div class="pmeta">Recorded in ${n.count} of 21 events</div>
+      <p class="pnote">${n.boundary}</p>
+      <div class="pk">Events</div>
+      <div class="chips">${n.events.map((x) => x.startsWith('E')
+        ? `<a href="#" class="chip" data-goto="${x}">${x}</a>`
+        : `<span class="chip ctx">${x}</span>`).join('')}</div>
+      <button class="reset" onclick="window.__reset()">Clear</button>`;
+    panel.querySelectorAll('[data-goto]').forEach((a) => a.addEventListener('click', (ev) => {
+      ev.preventDefault(); select('event', a.dataset.goto);
+    }));
+  }
+}
+function restPanel() {
+  const swatch = (c, t) => `<span class="lg"><i style="background:${c}"></i>${t}</span>`;
+  return `<div class="pk">Legend</div>
+    <div class="lgset">
+      ${swatch('#5C7FD6', 'Interaction condition')}
+      ${swatch('#EE8446', 'Relational move')}
+      ${swatch('#E2B03C', 'Immediate outcome')}
+      ${swatch('#C874AE', 'Post-interaction residue')}
+    </div>
+    <p class="pnote">One line is one recorded event, followed left to right across the four stages.</p>
+    <div class="freqkey">
+      <span class="fk"><i class="fkbar short"></i>recorded once</span>
+      <span class="fk"><i class="fkbar long"></i>recorded several times</span>
+    </div>
+    <p class="pnote">The mark under each label, and the bloom on each line, grow with how often that
+      category was recorded — never with how serious, distressing, or important it was.</p>
+    <p class="pnote">Categories run left to right from sustained to interrupted contact.</p>`;
+}
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('.sval'); if (!a) return;
+  e.preventDefault(); select('node', a.dataset.node);
+});
+
+/* ------------------------------------------------------------ hover card -- */
+function hit(t) {
+  const el = t.closest ? t.closest('[data-event],[data-node]') : null;
+  if (!el) return null;
+  const ev = el.getAttribute('data-event'), nd = el.getAttribute('data-node');
+  if (el.classList.contains('lanehead') || el.classList.contains('lanetick')
+      || el.classList.contains('reslane') || el.classList.contains('agg')) return { kind: 'node', id: nd };
+  if (ev) return { kind: 'event', id: ev };
+  if (nd) return { kind: 'node', id: nd };
+  return null;
+}
+const IDLE = '<div class="cidle">Hover a line or a category to identify it.</div>';
+const hideCard = () => { card.innerHTML = IDLE; };
+function showCard(h) {
+  if (sel && sel.kind === h.kind && sel.id === h.id) return hideCard();
+  if (h.kind === 'event') {
+    const e = byId[h.id];
+    card.innerHTML = `<div class="cid">${e.id}</div>
+      <div class="cmeta">${dayLabel(e.date)} · ${e.daypart}</div>
+      <div class="cline">${e.summary}</div>`;
+  } else {
+    const n = M.nodes[h.id], L = M.lanes[h.id];
+    card.innerHTML = `<div class="cid small">${n.label}</div>
+      <div class="cmeta">${L ? STAGE[L.family] : n.type}</div>
+      <div class="cline">Recorded in ${n.count} of 21 events.</div>`;
+  }
+}
+function wire() {
+  const svg = document.getElementById('svg');
+  svg.addEventListener('mousemove', (e) => { const h = hit(e.target); h ? showCard(h) : hideCard(); });
+  svg.addEventListener('mouseleave', hideCard);
+  svg.addEventListener('click', (e) => { const h = hit(e.target); h ? select(h.kind, h.id) : select(null); });
+  svg.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const r = svg.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+    const k = Math.min(6, Math.max(1, tf.k * (e.deltaY < 0 ? 1.12 : 1 / 1.12))), s = k / tf.k;
+    tf.x = px - (px - tf.x) * s; tf.y = py - (py - tf.y) * s; tf.k = k;
+    if (k === 1) { tf.x = 0; tf.y = 0; }
+    applyTf();
+  }, { passive: false });
+  let drag = null;
+  svg.addEventListener('mousedown', (e) => { drag = { x: e.clientX - tf.x, y: e.clientY - tf.y }; });
+  window.addEventListener('mouseup', () => { drag = null; });
+  window.addEventListener('mousemove', (e) => {
+    if (!drag || tf.k === 1) return;
+    tf.x = e.clientX - drag.x; tf.y = e.clientY - drag.y; applyTf();
+  });
+}
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.__reset(); });
+document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => mount(b.dataset.view)));
+mount('field');
+renderPanel();
+hideCard();
+</script>
